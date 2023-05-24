@@ -1,4 +1,4 @@
-package main.java.ru.yurch;
+package ru.yurch;
 
 public interface ReportGenerator {
     void print(String source);

@@ -1,4 +1,4 @@
-package main.java.ru.yurch;
+package ru.yurch;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
