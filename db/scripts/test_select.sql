@@ -1,0 +1,4 @@
+SELECT *
+FROM items
+WHERE date
+BETWEEN '2023-05-01' AND '2023-05-30';

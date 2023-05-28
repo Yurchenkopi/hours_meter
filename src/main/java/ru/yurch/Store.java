@@ -1,10 +1,11 @@
 package ru.yurch;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Predicate;
 
 public interface Store {
-    void add(Item item);
+    Item add(Item item);
 
-    List<Item> findBy(Predicate<Item> condition);
+    List<Item> findByDate(LocalDate startDate, LocalDate endDate);
 }

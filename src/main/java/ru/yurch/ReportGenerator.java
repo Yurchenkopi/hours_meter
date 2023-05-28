@@ -1,5 +1,7 @@
 package ru.yurch;
 
+import java.util.List;
+
 public interface ReportGenerator {
-    void print(String source);
+    String save(List<Item> content);
 }
