@@ -3,6 +3,7 @@ package ru.yurch;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
+import java.util.StringJoiner;
 import java.util.regex.Pattern;
 
 public class HoursMeter {
@@ -46,11 +47,12 @@ public class HoursMeter {
                 );
                 store.add(item);
             } else if (userChoice == 2) {
-                out.print(
-                        store.findByDate(
+                StringJoiner sj = new StringJoiner(System.lineSeparator());
+                store.findByDate(
                         dateInput(sc, dateRegex),
                         dateInput(sc, dateRegex)
-                ));
+                ).forEach(i -> sj.add(i.toString()));
+                out.print(sj);
             } else if (userChoice == 3) {
                 run = false;
             }
