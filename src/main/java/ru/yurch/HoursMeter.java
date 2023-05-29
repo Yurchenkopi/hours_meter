@@ -46,7 +46,7 @@ public class HoursMeter {
                 );
                 store.add(item);
             } else if (userChoice == 2) {
-                System.out.println(
+                out.print(
                         store.findByDate(
                         dateInput(sc, dateRegex),
                         dateInput(sc, dateRegex)
@@ -92,7 +92,7 @@ public class HoursMeter {
         try (SqlStore sqlStore = new SqlStore()) {
             sqlStore.init();
             HoursMeter hm = new HoursMeter(
-                    new ConsoleOutput(),
+                    new FileOutput("C:\\projects\\hours_meter\\data\\target.txt"),
                     sqlStore,
                     new SimpleHoursCalculator());
 
