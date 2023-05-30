@@ -9,13 +9,13 @@ import java.util.regex.Pattern;
 
 public class HoursMeter {
 
-    private Output out;
+    final private Output out;
 
-    private Scanner sc = new Scanner(System.in);
+    final private Scanner sc = new Scanner(System.in);
 
-    private Store store;
+    final private Store store;
 
-    private ReportGenerator report;
+    final private ReportGenerator report;
 
     public HoursMeter(Output out, Store store, ReportGenerator report) {
         this.out = out;
@@ -23,28 +23,32 @@ public class HoursMeter {
         this.report = report;
     }
 
-    public Store getStore() {
-        return store;
-    }
-
     private void init() {
+
         boolean run = true;
+
         int userChoice;
-        final String dateRegex = "^\\d{4}[;\\-,]\\d{1,2}[;\\-,]\\d{1,2}$";
-        final String timeRegex = "^\\d{1,2}[:\\-]\\d{1,2}$";
+
+        String dateRegex = "^\\d{4}[;\\-,]\\d{1,2}[;\\-,]\\d{1,2}$";
+
+        String timeRegex = "^\\d{1,2}[:\\-]\\d{1,2}$";
+
         while (run) {
+
             System.out.println("""
         Меню:
         1 - Добавить временной интервал;
-        2 - Вывести все временные интервалы за месяц;
-        3 - Выход;
+        2 - Вывести все временные интервалы за период;
+        3 - Вывести отчет о дополнительно отработанных днях;
+        4 - Выход;
         """);
+
             userChoice = Integer.parseInt(sc.nextLine());
             if (userChoice == 1) {
                 Item item = new Item(
-                        dateInput(sc, dateRegex),
-                        timeInput(sc, timeRegex, "начальное"),
-                        timeInput(sc, timeRegex, "конечное"),
+                        dateInput(sc, dateRegex, ""),
+                        timeInput(sc, timeRegex, "начальное "),
+                        timeInput(sc, timeRegex, "конечное "),
                         lunchBreakInput(sc)
                 );
                 store.add(item);
@@ -52,31 +56,32 @@ public class HoursMeter {
                 StringJoiner sj = new StringJoiner(System.lineSeparator());
                 List<Item> temp =
                         store.findByDate(
-                        dateInput(sc, dateRegex),
-                        dateInput(sc, dateRegex)
+                        dateInput(sc, dateRegex, "начальную "),
+                        dateInput(sc, dateRegex, "конечную ")
                 );
                 temp.forEach(i -> sj.add(i.toString()));
- /*               out.print(sj);
-
-  */
-                SimpleHoursCalculator shc = new SimpleHoursCalculator();
-                out.print(shc.save(temp));
-
+                out.print(sj.add(""));
             } else if (userChoice == 3) {
+                out.print(report.save(
+                        store.findByDate(
+                        dateInput(sc, dateRegex, "начальную "),
+                        dateInput(sc, dateRegex, "конечную ")
+                )));
+            } else if (userChoice == 4) {
                 run = false;
             }
         }
     }
 
-    private LocalDate dateInput(Scanner sc, String regex) {
-        System.out.println("Введите дату:");
+    private LocalDate dateInput(Scanner sc, String regex, String parameter) {
+        System.out.printf("Введите %sдату:%s", parameter, System.lineSeparator());
         Pattern pattern = Pattern.compile(regex);
         String date = sc.nextLine();
         while (!pattern.matcher(date).find()) {
             System.out.println("Повторите ввод даты!");
             date = sc.nextLine();
         }
-        String[] arrDate = date.split(";|-|:|,");
+        String[] arrDate = date.split("[;\\-:,]");
         return LocalDate.of(
                 Integer.parseInt(arrDate[0]),
                 Integer.parseInt(arrDate[1]),
@@ -85,14 +90,14 @@ public class HoursMeter {
     }
 
     private LocalTime timeInput(Scanner sc, String regex, String parameter) {
-        System.out.printf("Введите %s время:%s", parameter, System.lineSeparator());
+        System.out.printf("Введите %sвремя:%s", parameter, System.lineSeparator());
         Pattern pattern = Pattern.compile(regex);
         String time = sc.nextLine();
         while (!pattern.matcher(time).find()) {
             System.out.println("Повторите ввод времени!");
             time = sc.nextLine();
         }
-        String[] arrDate = time.split("-|:");
+        String[] arrDate = time.split("[-:]");
         return LocalTime.of(
                 Integer.parseInt(arrDate[0]),
                 Integer.parseInt(arrDate[1]),
@@ -101,7 +106,6 @@ public class HoursMeter {
     }
 
     private boolean lunchBreakInput(Scanner sc) {
-        boolean rsl = false;
         System.out.println("Работа с обеденным перерывом?");
         System.out.println("1 - да, 2 - нет");
         return Integer.parseInt(sc.nextLine()) == 1;
@@ -111,13 +115,14 @@ public class HoursMeter {
         try (SqlStore sqlStore = new SqlStore()) {
             sqlStore.init();
             HoursMeter hm = new HoursMeter(
-                    new FileOutput("C:\\projects\\hours_meter\\data\\target.txt"),
+  /*                  new FileOutput("C:\\projects\\hours_meter\\data\\target.txt"), */
+                    new ConsoleOutput(),
                     sqlStore,
                     new SimpleHoursCalculator());
 
             hm.init();
         } catch (Exception e) {
         e.printStackTrace();
-    }
+        }
     }
 }
