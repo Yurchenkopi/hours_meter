@@ -44,7 +44,8 @@ public class HoursMeter {
                 Item item = new Item(
                         dateInput(sc, dateRegex),
                         timeInput(sc, timeRegex, "начальное"),
-                        timeInput(sc, timeRegex, "конечное")
+                        timeInput(sc, timeRegex, "конечное"),
+                        lunchBreakInput(sc)
                 );
                 store.add(item);
             } else if (userChoice == 2) {
@@ -55,9 +56,11 @@ public class HoursMeter {
                         dateInput(sc, dateRegex)
                 );
                 temp.forEach(i -> sj.add(i.toString()));
-                out.print(sj);
+ /*               out.print(sj);
+
+  */
                 SimpleHoursCalculator shc = new SimpleHoursCalculator();
-                System.out.println(shc.save(temp));
+                out.print(shc.save(temp));
 
             } else if (userChoice == 3) {
                 run = false;
@@ -96,6 +99,14 @@ public class HoursMeter {
                 0
         );
     }
+
+    private boolean lunchBreakInput(Scanner sc) {
+        boolean rsl = false;
+        System.out.println("Работа с обеденным перерывом?");
+        System.out.println("1 - да, 2 - нет");
+        return Integer.parseInt(sc.nextLine()) == 1;
+    }
+
     public static void main(String[] args) {
         try (SqlStore sqlStore = new SqlStore()) {
             sqlStore.init();

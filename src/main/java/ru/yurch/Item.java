@@ -14,17 +14,21 @@ public class Item {
 
     private LocalTime endTime;
 
-    public Item(LocalDate date, LocalTime startTime, LocalTime endTime) {
+    private boolean lunchBreak;
+
+    public Item(LocalDate date, LocalTime startTime, LocalTime endTime, boolean lunchBreak) {
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.lunchBreak = lunchBreak;
     }
 
-    public Item(int id, LocalDate date, LocalTime startTime, LocalTime endTime) {
+    public Item(int id, LocalDate date, LocalTime startTime, LocalTime endTime, boolean lunchBreak) {
         this.id = id;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.lunchBreak = lunchBreak;
     }
 
     public void setId(int id) {
@@ -43,13 +47,18 @@ public class Item {
         return endTime;
     }
 
+    public boolean isLunchBreak() {
+        return lunchBreak;
+    }
+
     @Override
     public String toString() {
         return "Item{"
                 + "id=" + id
                 + ", date=" + date
-                + ", start_time=" + startTime
-                + ", end_time=" + endTime
+                + ", startTime=" + startTime
+                + ", endTime=" + endTime
+                + ", lunchBreak=" + lunchBreak
                 + '}';
     }
 }

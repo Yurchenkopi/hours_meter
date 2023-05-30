@@ -47,18 +47,20 @@ public class SqlStore implements Store, AutoCloseable {
                 rslSet.getInt("id"),
                 rslSet.getDate("date").toLocalDate(),
                 rslSet.getTime("start_time").toLocalTime(),
-                rslSet.getTime("end_time").toLocalTime()
+                rslSet.getTime("end_time").toLocalTime(),
+                rslSet.getBoolean("lunch_break")
         );
     }
 
     @Override
     public Item add(Item item) {
         try (var ps = cn.prepareStatement(
-                "INSERT INTO items(date, start_time, end_time) VALUES (?, ?, ?);",
+                "INSERT INTO items(date, start_time, end_time, lunch_break) VALUES (?, ?, ?, ?);",
                 Statement.RETURN_GENERATED_KEYS)) {
             ps.setDate(1, Date.valueOf(item.getDate()));
             ps.setTime(2, Time.valueOf(item.getStartTime()));
             ps.setTime(3, Time.valueOf(item.getEndTime()));
+            ps.setBoolean(4, item.isLunchBreak());
             ps.execute();
             try (var rslSet = ps.getGeneratedKeys()) {
                 if (rslSet.next()) {
