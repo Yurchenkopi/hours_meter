@@ -2,6 +2,7 @@ package ru.yurch;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Scanner;
 import java.util.StringJoiner;
 import java.util.regex.Pattern;
@@ -48,11 +49,16 @@ public class HoursMeter {
                 store.add(item);
             } else if (userChoice == 2) {
                 StringJoiner sj = new StringJoiner(System.lineSeparator());
-                store.findByDate(
+                List<Item> temp =
+                        store.findByDate(
                         dateInput(sc, dateRegex),
                         dateInput(sc, dateRegex)
-                ).forEach(i -> sj.add(i.toString()));
+                );
+                temp.forEach(i -> sj.add(i.toString()));
                 out.print(sj);
+                SimpleHoursCalculator shc = new SimpleHoursCalculator();
+                System.out.println(shc.save(temp));
+
             } else if (userChoice == 3) {
                 run = false;
             }
