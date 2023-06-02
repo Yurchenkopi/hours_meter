@@ -1,6 +1,7 @@
 package ru.yurch;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class FileOutput implements Output {
@@ -17,8 +18,8 @@ public class FileOutput implements Output {
 
     @Override
     public void print(Object obj) {
-        try (InputStream in = new BufferedInputStream(new ByteArrayInputStream(obj.toString().getBytes(StandardCharsets.UTF_8)));
-             OutputStream out = new BufferedOutputStream(new FileOutputStream(fileName))) {
+        try (InputStream in = new BufferedInputStream(new ByteArrayInputStream(obj.toString().getBytes(Charset.forName("WINDOWS-1251"))));
+             Writer out = new PrintWriter(new FileWriter(fileName, StandardCharsets.ISO_8859_1, false))) {
             int sym = in.read();
             while (sym > 0) {
                 out.write(sym);

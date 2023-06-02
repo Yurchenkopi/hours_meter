@@ -115,10 +115,10 @@ public class HoursMeter {
         try (SqlStore sqlStore = new SqlStore()) {
             sqlStore.init();
             HoursMeter hm = new HoursMeter(
-  /*                  new FileOutput("C:\\projects\\hours_meter\\data\\target.txt"), */
-                    new ConsoleOutput(),
+                    new FileOutput("C:\\projects\\hours_meter\\data\\target.csv"),
+ //                   new ConsoleOutput(),
                     sqlStore,
-                    new SimpleHoursCalculator());
+                    new CsvReportGenerator());
 
             hm.init();
         } catch (Exception e) {

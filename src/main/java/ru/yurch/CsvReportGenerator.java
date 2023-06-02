@@ -6,7 +6,7 @@ import java.util.StringJoiner;
 
 import static java.time.DayOfWeek.*;
 
-public class SimpleHoursCalculator implements ReportGenerator {
+public class CsvReportGenerator implements ReportGenerator {
     @Override
     public String save(List<Item> content) {
         StringJoiner sj = new StringJoiner(System.lineSeparator());
@@ -26,10 +26,10 @@ public class SimpleHoursCalculator implements ReportGenerator {
                     .append(";");
                 sj.add(sb);
             }
-        sj.add("Общее время в минутах: " + sum)
-                .add("Общее время в часах: " + (float) Math.round((float) sum * 100 / 60) / 100)
-                .add("Общее время в днях: " + (float) Math.round((float) sum * 100 / (60 * 8)) / 100
-                + System.lineSeparator());
+        sj.add("Общее время в минутах: ;" + sum + ";")
+                .add("Общее время в часах: ;" + (float) Math.round((float) sum * 100 / 60) / 100 + ";")
+                .add("Общее время в днях: ;" + (float) Math.round((float) sum * 100 / (60 * 8)) / 100
+                + ";" + System.lineSeparator());
     return sj.toString();
     }
 }
