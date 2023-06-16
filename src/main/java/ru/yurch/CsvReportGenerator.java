@@ -22,6 +22,10 @@ public class CsvReportGenerator implements ReportGenerator {
             sum += minutes;
             sb.append(i.getDate())
                     .append(";")
+                    .append(i.getStartTime())
+                    .append(";")
+                    .append(i.getEndTime())
+                    .append(";")
                     .append((float) Math.round((float) minutes * 100 / 60) / 100)
                     .append(";");
                 sj.add(sb);

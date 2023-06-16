@@ -60,7 +60,7 @@ public class HoursMeter {
                         dateInput(sc, dateRegex, "конечную ")
                 );
                 temp.forEach(i -> sj.add(i.toString()));
-                out.print(sj.add(""));
+                System.out.print(sj.add(""));
             } else if (userChoice == 3) {
                 out.print(report.save(
                         store.findByDate(
@@ -116,7 +116,7 @@ public class HoursMeter {
             sqlStore.init();
             HoursMeter hm = new HoursMeter(
                     new FileOutput("C:\\projects\\hours_meter\\data\\target.csv"),
- //                   new ConsoleOutput(),
+//                  new ConsoleOutput(),
                     sqlStore,
                     new CsvReportGenerator());
 

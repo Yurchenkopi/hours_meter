@@ -7,3 +7,6 @@ CREATE TABLE IF NOT EXISTS items (
 );
 
 DROP TABLE items;
+
+DELETE FROM items
+WHERE date = '2023-06-11';
