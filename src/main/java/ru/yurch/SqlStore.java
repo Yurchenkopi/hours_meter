@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.function.Predicate;
 
 public class SqlStore implements Store, AutoCloseable {
 
@@ -89,5 +88,18 @@ public class SqlStore implements Store, AutoCloseable {
             e.printStackTrace();
         }
         return data;
+    }
+
+    @Override
+    public boolean deleteByDate(LocalDate date) {
+        boolean rsl = false;
+        try (var ps = cn.prepareStatement(
+                "DELETE FROM items WHERE date = ?;")) {
+            ps.setDate(1, Date.valueOf(date));
+            rsl = ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rsl;
     }
 }

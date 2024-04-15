@@ -40,7 +40,8 @@ public class HoursMeter {
         1 - Добавить временной интервал;
         2 - Вывести все временные интервалы за период;
         3 - Вывести отчет о дополнительно отработанных днях;
-        4 - Выход;
+        4 - Удалить;
+        5 - Выход;
         """);
 
             userChoice = Integer.parseInt(sc.nextLine());
@@ -68,6 +69,10 @@ public class HoursMeter {
                         dateInput(sc, dateRegex, "конечную ")
                 )));
             } else if (userChoice == 4) {
+                store.deleteByDate(
+                                dateInput(sc, dateRegex, "")
+                        );
+            } else if (userChoice == 5) {
                 run = false;
             }
         }
