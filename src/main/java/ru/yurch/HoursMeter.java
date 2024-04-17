@@ -3,6 +3,7 @@ package ru.yurch;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.StringJoiner;
 import java.util.regex.Pattern;
@@ -52,15 +53,17 @@ public class HoursMeter {
                         lunchBreakInput(sc)
                 );
                 store.add(item);
-            } else if (userChoice == 2) {
+  /*          } else if (userChoice == 2) {
                 StringJoiner sj = new StringJoiner(System.lineSeparator());
                 List<Item> temp =
                         store.findByDate(
                         dateInput(sc, dateRegex, "начальную "),
                         dateInput(sc, dateRegex, "конечную ")
-                );
+                ).values();
                 temp.forEach(i -> sj.add(i.toString()));
                 System.out.print(sj.add(""));
+
+   */
             } else if (userChoice == 3) {
                 out.print(report.save(
                         store.findByDate(

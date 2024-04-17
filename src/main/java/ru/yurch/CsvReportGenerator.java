@@ -1,39 +1,43 @@
 package ru.yurch;
 
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 
 import static java.time.DayOfWeek.*;
 
 public class CsvReportGenerator implements ReportGenerator {
     @Override
-    public String save(List<Item> content) {
+    public String save(Map<LocalDate, List<Item>> content) {
         StringJoiner sj = new StringJoiner(System.lineSeparator());
         int sum = 0;
-        for (Item i : content) {
-            StringBuilder sb = new StringBuilder();
-            int minutes = (int) ChronoUnit.MINUTES.between(i.getStartTime(), i.getEndTime());
-            minutes = i.getDate().getDayOfWeek() != SATURDAY
-                    && i.getDate().getDayOfWeek() != SUNDAY
-                    ? minutes - 60 * 8 : minutes;
-            minutes = i.isLunchBreak()
-                    ? minutes - 60 : minutes;
-            sum += minutes;
-            sb.append(i.getDate())
-                    .append(";")
-                    .append(i.getStartTime())
-                    .append(";")
-                    .append(i.getEndTime())
-                    .append(";")
-                    .append((float) Math.round((float) minutes * 100 / 60) / 100)
-                    .append(";");
+        for (List<Item> list : content.values()) {
+            for (Item i : list) {
+                StringBuilder sb = new StringBuilder();
+                int minutes = (int) ChronoUnit.MINUTES.between(i.getStartTime(), i.getEndTime());
+                minutes = i.getDate().getDayOfWeek() != SATURDAY
+                        && i.getDate().getDayOfWeek() != SUNDAY
+                        ? minutes - 60 * 8 : minutes;
+                minutes = i.isLunchBreak()
+                        ? minutes - 60 : minutes;
+                sum += minutes;
+                sb.append(i.getDate())
+                        .append(";")
+                        .append(i.getStartTime())
+                        .append(";")
+                        .append(i.getEndTime())
+                        .append(";")
+                        .append((float) Math.round((float) minutes * 100 / 60) / 100)
+                        .append(";");
                 sj.add(sb);
             }
+        }
         sj.add("Общее время в минутах: ;" + sum + ";")
                 .add("Общее время в часах: ;" + (float) Math.round((float) sum * 100 / 60) / 100 + ";")
                 .add("Общее время в днях: ;" + (float) Math.round((float) sum * 100 / (60 * 8)) / 100
-                + ";" + System.lineSeparator());
+                        + ";" + System.lineSeparator());
     return sj.toString();
     }
 }

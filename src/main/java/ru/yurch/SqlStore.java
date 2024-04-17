@@ -2,10 +2,9 @@ package ru.yurch;
 
 import java.io.InputStream;
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class SqlStore implements Store, AutoCloseable {
@@ -74,15 +73,23 @@ public class SqlStore implements Store, AutoCloseable {
     }
 
     @Override
-    public List<Item> findByDate(LocalDate startDate, LocalDate endDate) {
-        List<Item> data = new ArrayList<>();
+    public Map<LocalDate, List<Item>> findByDate(LocalDate startDate, LocalDate endDate) {
+        Map<LocalDate, List<Item>> data = new HashMap<>();
         try (var ps = cn.prepareStatement(
                 "SELECT * FROM items WHERE date BETWEEN ? AND ? ;")) {
             ps.setDate(1, Date.valueOf(startDate));
             ps.setDate(2, Date.valueOf(endDate));
             try (var rslSet = ps.executeQuery()) {
                 while (rslSet.next()) {
-                    data.add(rslSetToItem(rslSet));
+                    Item tempItem = rslSetToItem(rslSet);
+                    data.computeIfAbsent(tempItem.getDate(), k -> new ArrayList<>());
+                    if (data.get(tempItem.getDate()) == null) {
+                        data.get(tempItem.getDate()).add(tempItem);
+                    }
+                    data.computeIfPresent(tempItem.getDate(), (k, v) -> {
+                        v.add(tempItem);
+                        return v;
+                    });
                 }
             }
         } catch (SQLException e) {
