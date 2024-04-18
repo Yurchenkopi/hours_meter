@@ -74,7 +74,7 @@ public class SqlStore implements Store, AutoCloseable {
 
     @Override
     public Map<LocalDate, List<Item>> findByDate(LocalDate startDate, LocalDate endDate) {
-        Map<LocalDate, List<Item>> data = new HashMap<>();
+        Map<LocalDate, List<Item>> data = new LinkedHashMap<>();
         try (var ps = cn.prepareStatement(
                 "SELECT * FROM items WHERE date BETWEEN ? AND ? ;")) {
             ps.setDate(1, Date.valueOf(startDate));
