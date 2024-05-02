@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS items (
   lunch_break bool
 );
 
-DROP TABLE items;
+--DROP TABLE items;
 
-DELETE FROM items
-WHERE date = '2023-06-11';
+--DELETE FROM items
+--WHERE date = '2023-06-11';
