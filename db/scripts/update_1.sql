@@ -9,4 +9,4 @@ CREATE TABLE IF NOT EXISTS items (
 DROP TABLE items;
 
 DELETE FROM items
-WHERE date = '2023-06-11';
+WHERE date = '2024-02-22';

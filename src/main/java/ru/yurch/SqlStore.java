@@ -2,10 +2,9 @@ package ru.yurch;
 
 import java.io.InputStream;
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class SqlStore implements Store, AutoCloseable {
 

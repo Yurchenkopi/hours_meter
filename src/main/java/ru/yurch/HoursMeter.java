@@ -2,9 +2,7 @@ package ru.yurch;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Scanner;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class HoursMeter {
@@ -39,7 +37,7 @@ public class HoursMeter {
         Меню:
         1 - Добавить временной интервал;
         2 - Вывести все временные интервалы за период;
-        3 - Вывести отчет о дополнительно отработанных днях;
+        3 - Вывести отчет о дополнительно отработанных днях за период;
         4 - Удалить;
         5 - Выход;
         """);
@@ -63,15 +61,33 @@ public class HoursMeter {
                 temp.forEach(i -> sj.add(i.toString()));
                 System.out.print(sj.add(""));
             } else if (userChoice == 3) {
-                out.print(report.save(
-                        store.findByDate(
-                        dateInput(sc, dateRegex, "начальную "),
-                        dateInput(sc, dateRegex, "конечную ")
-                )));
+                System.out.println(
+        """
+        -----------------------------------------
+        1          -    Сформировать отчёт за текущий месяц;
+        anyKey     -    Сформировать отчёт за произвольный период;
+        -----------------------------------------
+        """
+                );
+                String choice = sc.nextLine();
+                if (choice.length() == 1 && choice.charAt(0) == '1') {
+                    var currentYear = LocalDate.now().getYear();
+                    var currentMonth = LocalDate.now().getMonth();
+                    var currentLastDayOfMonth = LocalDate.now().lengthOfMonth();
+                    out.print(report.save(store.findByDate(
+                            LocalDate.of(currentYear, currentMonth, 1),
+                            LocalDate.of(currentYear, currentMonth, currentLastDayOfMonth))));
+                } else {
+                    out.print(report.save(
+                            store.findByDate(
+                                    dateInput(sc, dateRegex, "начальную "),
+                                    dateInput(sc, dateRegex, "конечную ")
+                            )));
+                }
             } else if (userChoice == 4) {
                 store.deleteByDate(
-                                dateInput(sc, dateRegex, "")
-                        );
+                        dateInput(sc, dateRegex, "")
+                );
             } else if (userChoice == 5) {
                 run = false;
             }
@@ -121,7 +137,7 @@ public class HoursMeter {
             sqlStore.init();
             HoursMeter hm = new HoursMeter(
                     new FileOutput("C:\\projects\\hours_meter\\data\\target.csv"),
-//                  new ConsoleOutput(),
+//                    new ConsoleOutput(),
                     sqlStore,
                     new CsvReportGenerator());
 
