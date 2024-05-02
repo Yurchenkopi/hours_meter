@@ -52,14 +52,14 @@ public class HoursMeter {
                 );
                 store.add(item);
             } else if (userChoice == 2) {
-                Collection<List<Item>> temp =
+                StringJoiner sj = new StringJoiner(System.lineSeparator());
+                List<Item> temp =
                         store.findByDate(
                         dateInput(sc, dateRegex, "начальную "),
                         dateInput(sc, dateRegex, "конечную ")
-                ).values();
-                temp.stream()
-                        .flatMap(Collection::stream)
-                        .forEach(System.out::println);
+                );
+                temp.forEach(i -> sj.add(i.toString()));
+                System.out.print(sj.add(""));
             } else if (userChoice == 3) {
                 System.out.println(
         """
@@ -95,35 +95,19 @@ public class HoursMeter {
     }
 
     private LocalDate dateInput(Scanner sc, String regex, String parameter) {
-        String menu = """
-        -----------------------------------------
-        1          -    Ввести текущую дату;
-        YYYY-MM-dd -    Ввести произвольную дату;
-        -----------------------------------------
-        """;
-        System.out.printf(
-                "Введите %sдату:%s%s%s",
-                parameter,
-                System.lineSeparator(),
-                menu,
-                System.lineSeparator()
-        );
-        String choice = sc.nextLine();
-        if (choice.length() == 1 && choice.charAt(0) == '1') {
-            return LocalDate.now();
-        } else {
-            Pattern pattern = Pattern.compile(regex);
-            while (!pattern.matcher(choice).find()) {
-                System.out.println("Повторите ввод даты!");
-                choice = sc.nextLine();
-            }
-            String[] arrDate = choice.split("[;\\-:,]");
-            return LocalDate.of(
-                    Integer.parseInt(arrDate[0]),
-                    Integer.parseInt(arrDate[1]),
-                    Integer.parseInt(arrDate[2])
-            );
+        System.out.printf("Введите %sдату:%s", parameter, System.lineSeparator());
+        Pattern pattern = Pattern.compile(regex);
+        String date = sc.nextLine();
+        while (!pattern.matcher(date).find()) {
+            System.out.println("Повторите ввод даты!");
+            date = sc.nextLine();
         }
+        String[] arrDate = date.split("[;\\-:,]");
+        return LocalDate.of(
+                Integer.parseInt(arrDate[0]),
+                Integer.parseInt(arrDate[1]),
+                Integer.parseInt(arrDate[2])
+        );
     }
 
     private LocalTime timeInput(Scanner sc, String regex, String parameter) {

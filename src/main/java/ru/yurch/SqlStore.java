@@ -72,23 +72,15 @@ public class SqlStore implements Store, AutoCloseable {
     }
 
     @Override
-    public Map<LocalDate, List<Item>> findByDate(LocalDate startDate, LocalDate endDate) {
-        Map<LocalDate, List<Item>> data = new LinkedHashMap<>();
+    public List<Item> findByDate(LocalDate startDate, LocalDate endDate) {
+        List<Item> data = new ArrayList<>();
         try (var ps = cn.prepareStatement(
                 "SELECT * FROM items WHERE date BETWEEN ? AND ? ;")) {
             ps.setDate(1, Date.valueOf(startDate));
             ps.setDate(2, Date.valueOf(endDate));
             try (var rslSet = ps.executeQuery()) {
                 while (rslSet.next()) {
-                    Item tempItem = rslSetToItem(rslSet);
-                    data.computeIfAbsent(tempItem.getDate(), k -> new ArrayList<>());
-                    if (data.get(tempItem.getDate()) == null) {
-                        data.get(tempItem.getDate()).add(tempItem);
-                    }
-                    data.computeIfPresent(tempItem.getDate(), (k, v) -> {
-                        v.add(tempItem);
-                        return v;
-                    });
+                    data.add(rslSetToItem(rslSet));
                 }
             }
         } catch (SQLException e) {
