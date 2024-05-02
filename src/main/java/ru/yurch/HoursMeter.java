@@ -152,8 +152,8 @@ public class HoursMeter {
         try (SqlStore sqlStore = new SqlStore()) {
             sqlStore.init();
             HoursMeter hm = new HoursMeter(
-  //                  new FileOutput("C:\\projects\\hours_meter\\data\\target.csv"),
-                    new ConsoleOutput(),
+                    new FileOutput("C:\\projects\\hours_meter\\data\\target.csv"),
+//                    new ConsoleOutput(),
                     sqlStore,
                     new CsvReportGenerator());
 
