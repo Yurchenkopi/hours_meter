@@ -7,7 +7,7 @@
   <groupId>ru.yurch</groupId>
   <packaging>jar</packaging>
   <artifactId>hours_meter</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>v1.11</version>
 
   <name>hours_meter</name>
 
@@ -158,10 +158,10 @@
                         <goal>shade</goal>
                     </goals>
                     <configuration>
-                        <finalName>find</finalName>
+                        <finalName>hoursMeter_v1.11</finalName>
                         <transformers>
                             <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                <mainClass>ru.yurch.io.filesearcher.Finder</mainClass>
+                                <mainClass>ru.yurch.HoursMeter</mainClass>
                             </transformer>
                         </transformers>
                     </configuration>
