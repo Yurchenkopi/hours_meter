@@ -1,0 +1,27 @@
+<div th:fragment="header">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/index">Accidents</a>
+            <div class="collapse navbar-collapse">
+                <div class="navbar-nav me-auto">
+                    <a class="nav-item nav-link" href="/index">Главная</a>
+                    <a class="nav-item nav-link" href="/accidents">Список нарушений</a>
+                    <a class="nav-item nav-link" href="/accidents/create">Добавить Инцидент</a>
+                </div>
+                <div class="navbar-nav" th:if="${#strings.isEmpty(user)}">
+                    <a class="nav-item nav-link" th:href="@{/reg}">Регистрация</a>
+                    <a class="nav-item nav-link" th:href="@{/login}">Войти</a>
+                </div>
+                <div class="navbar-nav" th:if="${not #strings.isEmpty(user)}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${user.username}"></a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" th:href="@{#}">Личные данные</a></li>
+                        </ul>
+                    </li>
+                    <a class="nav-item nav-link" th:href="@{/logout}">Выйти</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>

@@ -1,0 +1,16 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{ISO8601} %highlight(%5p %c:%M:%L - %m%n) </pattern>
+        </encoder>
+    </appender>
+
+    <!-- Уровень логирования для пакета org.hibernate установлен на ERROR -->
+    <logger name="org.hibernate" level="INFO"/>
+    <!-- Отключение логов от Logback о поиске конфигурационных файлов -->
+    <logger name="ch.qos.logback.classic" level="ERROR"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

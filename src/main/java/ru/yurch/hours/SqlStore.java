@@ -1,4 +1,4 @@
-package ru.yurch;
+package ru.yurch.hours;
 
 import java.io.InputStream;
 import java.sql.*;

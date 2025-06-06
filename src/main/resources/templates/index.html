@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link th:href = "@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script th:src="@{/js/code.jquery.com_jquery-3.7.0.min.js}"></script>
+    <script th:src="@{/umd/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+
+    <title>Accidents</title>
+</head>
+<body>
+<div class="container-fluid p-0">
+    <header th:insert="blocks/header :: header"></header>
+    <div class="container mt-2">
+        <h5>Описание проекта</h5>
+        <p>Проект выполнен в учебных целях для освоения возможностей Spring.</br>
+            Проект является сервисом, предоставляющим информацию об автонарушителях.
+            В системе имеются две роли: пользователи и автоинспекторы.
+        </p>
+        <h6>Пользователь добавляет описание автонарушения:</br></h6>
+        <ul>
+            <li>Адрес;</li>
+            <li>Номер машины;</li>
+            <li>Описание нарушения;</li>
+            <li>Фотографию нарушения.</li>
+
+        </ul>
+        <h6>У заявки есть статус:</br></h6>
+        <ul>
+            <li>Принята</li>
+            <li>Отклонена</li>
+            <li>Завершена</li>
+        </ul>
+        <h6>Стек технологий:</br></h6>
+        <ul>
+            <li>Java 17</li>
+            <li>PostgreSQL 14</li>
+            <li>Maven 3.8.5</li>
+            <li>Spring boot 2.7.6</li>
+            <li>Liquibase 4.15.0</li>
+            <li>Hibernate</li>
+            <li>h2Database 2.1.214</li>
+            <li>Bootstrap 5.2.3</li>
+        </ul>
+        <h6>Требования к окружению:</br></h6>
+        <ul>
+            <li>Java 17</li>
+            <li>PostgreSQL 14</li>
+            <li>Maven 3.8.5</li>
+        </ul>
+    </div>
+    <div class="bg-light sticky-bottom">
+        <footer th:insert="blocks/footer :: footer"></footer>
+    </div>
+</div>
+</body>
+</html>
