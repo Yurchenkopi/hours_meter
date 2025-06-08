@@ -1,4 +1,7 @@
-package ru.yurch.hours;
+package ru.yurch.hours.service;
+
+import ru.yurch.hours.repository.SqlStore;
+import ru.yurch.hours.repository.Store;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

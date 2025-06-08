@@ -1,4 +1,6 @@
-package ru.yurch.hours;
+package ru.yurch.hours.repository;
+
+import ru.yurch.hours.model.Item;
 
 import java.io.InputStream;
 import java.sql.*;
@@ -40,15 +42,18 @@ public class SqlStore implements Store, AutoCloseable {
         }
     }
 
-    private Item rslSetToItem(ResultSet rslSet) throws SQLException {
-        return new Item(
-                rslSet.getInt("id"),
-                rslSet.getDate("date").toLocalDate(),
-                rslSet.getTime("start_time").toLocalTime(),
-                rslSet.getTime("end_time").toLocalTime(),
-                rslSet.getBoolean("lunch_break")
-        );
-    }
+ //   private Item rslSetToItem(ResultSet rslSet) throws SQLException {
+ //       return new Item(
+ //               rslSet.getInt("id"),
+ //               rslSet.getObject("user_id"),
+ //               rslSet.getDate("date").toLocalDate(),
+ //               rslSet.getTime("start_time").toLocalTime(),
+ //               rslSet.getTime("end_time").toLocalTime(),
+ //               rslSet.getBoolean("lunch_break"),
+ //               rslSet.getBoolean("extra_hours_only"),
+ //               rslSet.getString("remark")
+ //       );
+ //   }
 
     @Override
     public Item add(Item item) {

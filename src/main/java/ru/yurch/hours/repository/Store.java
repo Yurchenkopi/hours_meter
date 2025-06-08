@@ -1,4 +1,6 @@
-package ru.yurch.hours;
+package ru.yurch.hours.repository;
+
+import ru.yurch.hours.model.Item;
 
 import java.time.LocalDate;
 import java.util.List;

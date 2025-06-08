@@ -1,4 +1,4 @@
-package ru.yurch.hours;
+package ru.yurch.hours.service;
 
 import java.io.*;
 import java.nio.charset.Charset;

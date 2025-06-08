@@ -1,4 +1,4 @@
-package ru.yurch.hours;
+package ru.yurch.hours.service;
 
 public class ConsoleOutput implements Output {
     @Override

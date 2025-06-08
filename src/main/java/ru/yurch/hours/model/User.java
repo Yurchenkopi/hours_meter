@@ -15,13 +15,23 @@ public class User {
     @EqualsAndHashCode.Include
     private int id;
 
-    private String password;
-
-    private String username;
-
     @ManyToOne
     @JoinColumn(name = "authority_id")
     private Authority authority;
+
+    private Long chatId;
+
+    private String username;
+
+    private String email;
+
+    private String name;
+
+    private String patronymic;
+
+    private String surname;
+
+    private String password;
 
     private boolean enabled;
 }
