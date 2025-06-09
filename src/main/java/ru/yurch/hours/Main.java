@@ -15,11 +15,8 @@ public class Main extends SpringBootServletInitializer {
         return application.sources(Main.class);
     }
 
-    private static PasswordEncoder encoder = new BCryptPasswordEncoder();
-
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
         System.out.println("Go to http://localhost:8080/index");
-        System.out.println(encoder.encode("12345"));
     }
 }

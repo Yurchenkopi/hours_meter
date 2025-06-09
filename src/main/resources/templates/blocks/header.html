@@ -1,12 +1,12 @@
 <div th:fragment="header">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="/index">Accidents</a>
+            <a class="navbar-brand" href="/index">Hours_meter</a>
             <div class="collapse navbar-collapse">
                 <div class="navbar-nav me-auto">
                     <a class="nav-item nav-link" href="/index">Главная</a>
-                    <a class="nav-item nav-link" href="/accidents">Список нарушений</a>
-                    <a class="nav-item nav-link" href="/accidents/create">Добавить Инцидент</a>
+                    <a class="nav-item nav-link" href="/items">История</a>
+                    <a class="nav-item nav-link" href="/items/create">Добавить часы</a>
                 </div>
                 <div class="navbar-nav" th:if="${#strings.isEmpty(user)}">
                     <a class="nav-item nav-link" th:href="@{/reg}">Регистрация</a>

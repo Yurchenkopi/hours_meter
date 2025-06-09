@@ -20,34 +20,33 @@
         <div class="row pt-3">
             <div class="card" style="width: 100%">
                 <div class="card-header">
-                    Новый инцидент
+                    Редактирование заявки
                 </div>
                 <div class="card-body">
-                    <form th:action="@{/accidents/create}" method="POST" enctype="multipart/form-data">
-                        <input type="hidden" name="id" value="0"/>
+                    <form th:action="@{/templates/items/update?(id=*{id})}" th:object="${accident}" method="POST" enctype="multipart/form-data">
                         <div class="mb-2">
                             <label for="name"><b>Название</b></label>
-                            <input type="text" class="form-control" name="name" id="name" placeholder="Название инцидента">
+                            <input type="text" class="form-control" name="name" id="name" th:field="*{name}">
                         </div>
                         <div class="mb-2">
                             <label for="type"><b>Тип инцидента</b></label>
                             <select class="form-control" id="type" name="type">
-                                <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
+                                <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}" th:selected="${type.id==accident.type.id}"></option>
                             </select>
                         </div>
                         <div class="mb-2">
                             <label for="rIds"><b>Статья</b></label>
                             <select class="form-control" id="rIds" name="rules" multiple required>
-                                <option th:each="rule : ${rules}" th:value="${rule.id}" th:text="${rule.name}"></option>
+                                <option th:each="rule : ${rules}" th:value="${rule.id}" th:text="${rule.name}" th:selected="${accident.rules.contains(rule)}"></option>
                             </select>
                         </div>
                         <div class="mb-2">
                             <label for="text"><b>Описание</b></label>
-                            <textarea class="form-control" id="text" name="text" rows="3" placeholder="Подробное описание инцидента"></textarea>
+                            <textarea class="form-control" id="text" name="text" rows="3" th:field="*{text}"></textarea>
                         </div>
                         <div class="mb-2">
                             <label for="address"><b>Адрес</b></label>
-                            <input type="text" class="form-control" name="address" id="address" placeholder="Адрес">
+                            <input type="text" class="form-control" name="address" id="address" th:field="*{address}">
                         </div>
                         <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
                     </form>

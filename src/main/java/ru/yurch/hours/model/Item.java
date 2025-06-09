@@ -33,7 +33,7 @@ public class Item {
     @Column(name = "end_time")
     private LocalTime endTime;
 
-    @Column(name = "launch_break")
+    @Column(name = "lunch_break")
     private boolean lunchBreak;
 
     @Column(name = "extra_hours_only")

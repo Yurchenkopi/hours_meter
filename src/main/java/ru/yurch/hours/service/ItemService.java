@@ -40,10 +40,10 @@ public class ItemService {
         return rsl;
     }
 
-    public List<Item> findItemsByDate(LocalDate startDate, LocalDate endDate) {
+    public List<Item> findItemsByDate(LocalDate startDate, LocalDate endDate, User user) {
         List<Item> rsl = Collections.emptyList();
         try {
-            rsl = findItemsByDate(startDate, endDate);
+            rsl = itemRepository.findItemsByDate(startDate, endDate, user);
         } catch (Exception e) {
             LOG.error("Error occurred while finding items:  " + e.getMessage());
         }

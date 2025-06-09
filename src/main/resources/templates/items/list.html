@@ -11,7 +11,7 @@
     <link th:href = "@{/css/bootstrap.min.css}" rel="stylesheet">
     <script th:src="@{/umd/popper.min.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
-    <title>Accidents</title>
+    <title>Hours_meter</title>
     <style>
         .table-hover tbody tr:hover {
             background-color: #bee5eb;
@@ -27,26 +27,26 @@
                 <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Название</th>
-                    <th scope="col">Описание</th>
-                    <th scope="col">Тип</th>
-                    <th scope="col">Статья</th>
-                    <th scope="col">Адрес</th>
+                    <th scope="col">Дата</th>
+                    <th scope="col">Время прихода</th>
+                    <th scope="col">Время ухода</th>
+                    <th scope="col">Обед</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="accident: ${accidents}" th:href="@{/accidents/update?id={id}(id=${accident.id})}" style="cursor: pointer;">
-                    <td th:text="${accident.id}"></td>
-                    <td th:text="${accident.name}"></td>
-                    <td th:if="${#strings.length(accident.text) &gt;= 20}" th:text="${#strings.substring(accident.text, 0, 20) + '...'}"></td>
-                    <td th:if="${#strings.length(accident.text) &lt; 20}" th:text="${accident.text}"></td>
-                    <td th:text="${accident.type.name}"></td>
+                <tr th:each="item: ${items}" th:href="@{/templates/items/update?id={id}(id=${item.id})}" style="cursor: pointer;">
+                    <td th:text="${item.id}"></td>
+                    <td th:text="${#temporals.format(item.date, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${#temporals.format(item.startTime, 'HH:mm')}"></td>
+                    <td th:text="${#temporals.format(item.endTime, 'HH:mm')}"></td>
                     <td>
-                        <ul>
-                            <li th:each="rule: ${accident.rules}" th:text="${rule.name}"></li>
-                        </ul>
+                        <span th:if="${item.lunchBreak}">
+                            <i class="bi bi-check-square"></i>
+                        </span>
+                        <span th:if="${!item.lunchBreak}">
+                            <i class="bi bi-square"></i>
+                        </span>
                     </td>
-                    <td th:text="${accident.address}"></td>
                 </tr>
                 </tbody>
             </table>
