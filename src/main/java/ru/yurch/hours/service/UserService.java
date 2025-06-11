@@ -26,4 +26,14 @@ public class UserService {
         }
         return rsl;
     }
+
+    public Optional<User> findByName(String userName) {
+        Optional<User> rsl = Optional.empty();
+        try {
+            rsl = userRepository.findByUsername(userName);
+        } catch (Exception e) {
+            LOG.error("Error occurred while finding user:  " + e.getMessage());
+        }
+        return rsl;
+    }
 }
