@@ -4,13 +4,10 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import ru.yurch.hours.model.User;
 import ru.yurch.hours.service.ItemService;
 import ru.yurch.hours.service.UserService;
 
@@ -28,16 +25,13 @@ public class ItemController {
     @GetMapping("/find")
     public String getByDate(
             Model model,
+            @RequestAttribute(name = "user") User user,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
             ) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        var user = userService.findByName(userDetails.getUsername());
-        LOG.info("Current user is: " + user);
-        LOG.info("Start date is: " + startDate.toString());
-        LOG.info("End date is: " + endDate.toString());
-        if (user.isPresent()) {
-            var rsl = itemService.findItemsByDate(startDate, endDate, user.get());
+        var currentUser = userService.findByName(user.getUsername());
+        if (currentUser.isPresent() && startDate != null && endDate != null) {
+            var rsl = itemService.findItemsByDate(startDate, endDate, currentUser.get());
             rsl.forEach(System.out::println);
             model.addAttribute("items", rsl);
         }
