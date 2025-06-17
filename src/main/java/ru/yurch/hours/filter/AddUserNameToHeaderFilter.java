@@ -27,7 +27,7 @@ public class AddUserNameToHeaderFilter extends HttpFilter {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = new User();
         LOG.info("Principal is {}", authentication.getPrincipal());
-        if (!authentication.getPrincipal().equals("anonymousUser")){
+        if (!authentication.getPrincipal().equals("anonymousUser")) {
             var userDetails = (UserDetails) authentication.getPrincipal();
             user.setUsername(userDetails.getUsername());
         } else {

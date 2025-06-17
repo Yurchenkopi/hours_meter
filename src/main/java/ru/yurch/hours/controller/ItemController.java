@@ -28,12 +28,23 @@ public class ItemController {
             @RequestAttribute(name = "user") User user,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
-            ) {
+    ) {
+        if (endDate == null) {
+            model.addAttribute("currentEndDate", LocalDate.now());
+        } else {
+            model.addAttribute("currentEndDate", endDate);
+        }
+        if (startDate == null) {
+            model.addAttribute("currentStartDate", "2022-01-01");
+        } else {
+            model.addAttribute("currentStartDate", startDate);
+        }
         var currentUser = userService.findByName(user.getUsername());
         if (currentUser.isPresent() && startDate != null && endDate != null) {
             var rsl = itemService.findItemsByDate(startDate, endDate, currentUser.get());
+            var rslDto = itemService.updateExtraTime(rsl);
             rsl.forEach(System.out::println);
-            model.addAttribute("items", rsl);
+            model.addAttribute("itemsDtoMap", rslDto);
         }
         return "items/list";
     }

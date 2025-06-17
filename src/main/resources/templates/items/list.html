@@ -26,11 +26,11 @@
             <form th:action="@{/items/find}" method="GET" enctype="multipart/form-data">
                 <div class="mb-2">
                     <label for="startDate"><b>Начало периода</b></label>
-                    <input type="text" class="form-control" name="startDate" id="startDate" placeholder="2022-01-01">
+                    <input type="date" class="form-control" name="startDate" id="startDate" th:value="${currentStartDate}">
                 </div>
                 <div class="mb-2">
                     <label for="endDate"><b>Конец периода</b></label>
-                    <input type="text" class="form-control" name="endDate" id="endDate" placeholder="2025-07-01">
+                    <input type="date" class="form-control" name="endDate" id="endDate" th:value="${currentEndDate}">
                 </div>
                 <button type="submit" class="btn btn-primary mt-1 col-12">Найти</button>
             </form>
@@ -42,23 +42,27 @@
                     <th scope="col">Время прихода</th>
                     <th scope="col">Время ухода</th>
                     <th scope="col">Обед</th>
+                    <th scope="col">Доп.время, ч.</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="item: ${items}" th:href="@{/templates/items/update?id={id}(id=${item.id})}" style="cursor: pointer;">
-                    <td th:text="${item.id}"></td>
-                    <td th:text="${#temporals.format(item.date, 'yyyy-MM-dd')}"></td>
-                    <td th:text="${#temporals.format(item.startTime, 'HH:mm')}"></td>
-                    <td th:text="${#temporals.format(item.endTime, 'HH:mm')}"></td>
-                    <td>
+                <div th:each="entry: ${itemsDtoMap.entrySet()}">
+                    <tr th:each="item: ${entry.value}" th:href="@{/templates/items/update?id={id}(id=${item.id})}" style="cursor: pointer;">
+                        <td th:text="${item.id}"></td>
+                        <td th:text="${#temporals.format(item.date, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${#temporals.format(item.startTime, 'HH:mm')}"></td>
+                        <td th:text="${#temporals.format(item.endTime, 'HH:mm')}"></td>
+                        <td>
                         <span th:if="${item.lunchBreak}">
                             <i class="bi bi-check-square"></i>
                         </span>
-                        <span th:if="${!item.lunchBreak}">
+                            <span th:if="${!item.lunchBreak}">
                             <i class="bi bi-square"></i>
                         </span>
-                    </td>
-                </tr>
+                        </td>
+                        <td th:text="${item.minutes/60}"></td>
+                    </tr>
+                </div>
                 </tbody>
             </table>
         </div>
