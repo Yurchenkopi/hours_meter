@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.yurch.hours.dto.ItemDto;
 import ru.yurch.hours.model.Item;
+import ru.yurch.hours.model.Report;
 import ru.yurch.hours.model.User;
 import ru.yurch.hours.repository.ItemRepository;
 
@@ -60,6 +61,7 @@ public class ItemService {
         itemDto.setStartTime(item.getStartTime());
         itemDto.setEndTime(item.getEndTime());
         itemDto.setLunchBreak(item.isLunchBreak());
+        itemDto.setExtraHoursOnly(item.isExtraHoursOnly());
         itemDto.setRemark(item.getRemark());
         return itemDto;
     }
@@ -79,8 +81,10 @@ public class ItemService {
         return content;
     }
 
-    public Map<LocalDate, List<ItemDto>> updateExtraTime(List<Item> items) {
+    public Report updateExtraTime(List<Item> items) {
         Map<LocalDate, List<ItemDto>> content = convertToItemsDto(items);
+        var report = new Report();
+        float sumOfTime = 0;
         for (List<ItemDto> list : content.values()) {
             float minutes = 0;
             LocalDate ld = list.getFirst().getDate();
@@ -94,6 +98,7 @@ public class ItemService {
                     minutes = ChronoUnit.MINUTES.between(i.getStartTime(), i.getEndTime()) + delta;
                     minutes = i.isLunchBreak()
                             ? minutes - 60 : minutes;
+                    sumOfTime += minutes;
                     i.setMinutes(minutes);
                 }
             } else {
@@ -101,10 +106,13 @@ public class ItemService {
                     minutes += ChronoUnit.MINUTES.between(i.getStartTime(), i.getEndTime());
                     minutes = i.isLunchBreak()
                             ? minutes - 60 : minutes;
+                    sumOfTime += minutes;
                     i.setMinutes(minutes);
                 }
             }
         }
-        return content;
+        report.setContent(content);
+        report.setTimeInMinutes(sumOfTime);
+        return report;
     }
 }

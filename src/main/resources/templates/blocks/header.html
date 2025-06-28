@@ -5,8 +5,8 @@
             <div class="collapse navbar-collapse">
                 <div class="navbar-nav me-auto">
                     <a class="nav-item nav-link" href="/index">Главная</a>
-                    <a class="nav-item nav-link" href="/items/find">История</a>
-                    <a class="nav-item nav-link" href="/items/create">Добавить часы</a>
+                    <a class="nav-item nav-link" href="/items/find">Статистика</a>
+                    <a class="nav-item nav-link" href="/items/add">Добавить часы</a>
                 </div>
                 <div class="navbar-nav" th:if="${user == null || user.username == 'Гость'}">
                     <a class="nav-item nav-link" th:href="@{/reg}">Регистрация</a>

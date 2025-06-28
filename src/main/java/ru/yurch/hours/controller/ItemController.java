@@ -7,11 +7,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.yurch.hours.model.Item;
 import ru.yurch.hours.model.User;
 import ru.yurch.hours.service.ItemService;
 import ru.yurch.hours.service.UserService;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Controller
 @RequestMapping("/items")
@@ -30,22 +32,53 @@ public class ItemController {
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) {
         if (endDate == null) {
-            model.addAttribute("currentEndDate", LocalDate.now());
-        } else {
-            model.addAttribute("currentEndDate", endDate);
+            endDate = LocalDate.now();
         }
         if (startDate == null) {
-            model.addAttribute("currentStartDate", "2022-01-01");
-        } else {
-            model.addAttribute("currentStartDate", startDate);
+            startDate = LocalDate.of(2022, 1, 1);
         }
+        model.addAttribute("currentStartDate", startDate);
+        model.addAttribute("currentEndDate", endDate);
         var currentUser = userService.findByName(user.getUsername());
-        if (currentUser.isPresent() && startDate != null && endDate != null) {
+        if (currentUser.isPresent()) {
             var rsl = itemService.findItemsByDate(startDate, endDate, currentUser.get());
-            var rslDto = itemService.updateExtraTime(rsl);
+            var report = itemService.updateExtraTime(rsl);
             rsl.forEach(System.out::println);
-            model.addAttribute("itemsDtoMap", rslDto);
+            model.addAttribute("itemsDtoMap", report.getContent());
+            var minutes = report.getTimeInMinutes();
+            model.addAttribute("sumOfTimeInMinutes", minutes);
+            model.addAttribute("sumOfTimeInHours", (float) Math.round(minutes * 100 / 60) / 100);
+            model.addAttribute("sumOfTimeInDays", (float) Math.round(minutes * 100 / (60 * 8)) / 100);
         }
         return "items/list";
+    }
+
+    @GetMapping("/add")
+    public String addItem(Model model) {
+        model.addAttribute("currentDate", LocalDate.now());
+        model.addAttribute("startTime", LocalTime.of(9, 0));
+        model.addAttribute("endTime", LocalTime.now());
+        return "items/new";
+    }
+
+    @PostMapping("/add")
+    public String addItem(
+        @ModelAttribute Item item,
+        @RequestAttribute(name = "user") User user,
+        Model model
+    ) {
+        item.setUser(userService.findByName(user.getUsername()).get());
+        LOG.info("Item {} was saved in DB", item);
+        LOG.info("Item has \"extraHours\" label: {}", item.isExtraHoursOnly());
+        var itemOptional = itemService.save(item);
+        if (itemOptional.isEmpty()) {
+            model.addAttribute("message", "Не удалось добавить временной интервал.");
+            return "errors/404";
+        }
+        var message = String.format(
+                "Временной интервал за %s добавлен в БД.",
+                item.getDate());
+        model.addAttribute("message", message);
+        return "messages/message";
     }
 }

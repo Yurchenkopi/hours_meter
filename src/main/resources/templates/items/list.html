@@ -42,7 +42,8 @@
                     <th scope="col">Время прихода</th>
                     <th scope="col">Время ухода</th>
                     <th scope="col">Обед</th>
-                    <th scope="col">Доп.время, ч.</th>
+                    <th scope="col">Учет основного времени</th>
+                    <th scope="col">Отработанное время, ч.</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -52,11 +53,19 @@
                         <td th:text="${#temporals.format(item.date, 'yyyy-MM-dd')}"></td>
                         <td th:text="${#temporals.format(item.startTime, 'HH:mm')}"></td>
                         <td th:text="${#temporals.format(item.endTime, 'HH:mm')}"></td>
-                        <td>
+                        <td style="text-align: center;">
                         <span th:if="${item.lunchBreak}">
                             <i class="bi bi-check-square"></i>
                         </span>
                             <span th:if="${!item.lunchBreak}">
+                            <i class="bi bi-square"></i>
+                        </span>
+                        </td>
+                        <td style="text-align: center;">
+                        <span th:if="${!item.extraHoursOnly}">
+                            <i class="bi bi-check-square"></i>
+                        </span>
+                            <span th:if="${item.extraHoursOnly}">
                             <i class="bi bi-square"></i>
                         </span>
                         </td>
@@ -65,6 +74,48 @@
                 </div>
                 </tbody>
             </table>
+            <div class="container"  style="background-color: var(--bs-gray-200);">
+                <div class="row" style="background-color: var(--bs-gray-500);">
+                    <div class="col-8">
+                        <h6 style="text-align: left;" th:text="'ИТОГО '"></h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-3">
+                        <h6 style="text-align: left;" th:text="'- в минутах'"></h6>
+                    </div>
+                    <div class="col-3">
+                        <h6 style="text-align: left;" th:text="${sumOfTimeInMinutes}"></h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-3">
+                        <h6 style="text-align: left;" th:text="'- в часах'"></h6>
+                    </div>
+                    <div class="col-3">
+                        <h6 style="text-align: left;" th:text="${sumOfTimeInHours}"></h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-3">
+                        <h6 style="text-align: left;" th:text="'- в днях'"></h6>
+                    </div>
+                    <div class="col-3">
+                        <h6 style="text-align: left;" th:text="${sumOfTimeInDays}"></h6>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <a class="btn btn-primary w-100" th:href="@{/items/add}">
+                        Добавить часы &nbsp;&nbsp;&nbsp;
+                        <i class="fa fa-plus"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="bg-light sticky-bottom">

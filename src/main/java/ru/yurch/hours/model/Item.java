@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ public class Item {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
 
     @Column(name = "start_time")
@@ -37,7 +39,7 @@ public class Item {
     private boolean lunchBreak;
 
     @Column(name = "extra_hours_only")
-    private boolean isExtraHoursOnly;
+    private boolean extraHoursOnly;
 
     private String remark;
 }
