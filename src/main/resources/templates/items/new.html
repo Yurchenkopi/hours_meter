@@ -36,14 +36,14 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="endTime" class="form-label"><b>Время ухода</b></label>
-                                    <input type="time" class="form-control" id="endTime" name="endTime" th:value="${endTime}">
+                                    <input type="time" class="form-control" id="endTime" name="endTime" th:value="${#temporals.format(endTime, 'HH:mm')}">
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="mb-3 text-center">
                                     <label class="form-label" for="lunchBreak"><b>Обеденный перерыв</b></label>
                                     <div class="mt-1 form-switch d-flex align-items-center justify-content-center ">
-                                        <input type="checkbox" name="lunchBreak" class="form-check-input" id="lunchBreak">
+                                        <input type="checkbox" name="lunchBreak" class="form-check-input" id="lunchBreak" checked>
                                     </div>
                                 </div>
                                 <div class="mb-3 text-center">
@@ -61,12 +61,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-9">
-                                <div class="row">
-                                    <div class="col-6"><a class="btn btn-danger w-100" th:href="@{/items/find}">Отмена</a></div>
-                                    <div class="col-6"><button class="btn btn-success w-100" type="submit">Сохранить</button></div>
-                                </div>
-                            </div>
+                            <button class="btn btn-primary w-100" type="submit">Сохранить</button>
                         </div>
                     </form>
                 </div>

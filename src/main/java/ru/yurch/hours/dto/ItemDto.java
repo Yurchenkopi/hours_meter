@@ -13,6 +13,8 @@ import java.time.LocalTime;
 public class ItemDto {
     private int id;
 
+    private int seqNum;
+
     private LocalDate date;
 
     private LocalTime startTime;

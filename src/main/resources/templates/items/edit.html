@@ -20,35 +20,54 @@
         <div class="row pt-3">
             <div class="card" style="width: 100%">
                 <div class="card-header">
-                    Редактирование заявки
+                    Редактирование временного интервала
                 </div>
                 <div class="card-body">
-                    <form th:action="@{/templates/items/update?(id=*{id})}" th:object="${accident}" method="POST" enctype="multipart/form-data">
-                        <div class="mb-2">
-                            <label for="name"><b>Название</b></label>
-                            <input type="text" class="form-control" name="name" id="name" th:field="*{name}">
+                    <form class="mt-2" th:action="@{/items/update?(id=*{id})}" th:object="${item}" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-9">
+                                <div class="mb-3">
+                                    <label for="date" class="form-label"><b>Дата</b></label>
+                                    <input type="date" class="form-control" id="date" name="date" th:field="*{date}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="startTime" class="form-label"><b>Время прихода</b></label>
+                                    <input type="time" class="form-control" id="startTime" name="startTime" th:field="*{startTime}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="endTime" class="form-label"><b>Время ухода</b></label>
+                                    <input type="time" class="form-control" id="endTime" name="endTime" th:field="*{endTime}">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="mb-3 text-center">
+                                    <label class="form-label" for="lunchBreak"><b>Обеденный перерыв</b></label>
+                                    <div class="mt-1 form-switch d-flex align-items-center justify-content-center ">
+                                        <input type="checkbox" name="lunchBreak" class="form-check-input" id="lunchBreak" th:field="*{lunchBreak}">
+                                    </div>
+                                </div>
+                                <div class="mb-3 text-center">
+                                    <label class="form-label" for="extraHoursOnly"><b>Не учитывать основное время</b></label>
+                                    <div class="mt-1 form-switch d-flex align-items-center justify-content-center ">
+                                        <input type="checkbox" name="extraHoursOnly" class="form-check-input" id="extraHoursOnly" th:field="*{extraHoursOnly}">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-2">
-                            <label for="type"><b>Тип инцидента</b></label>
-                            <select class="form-control" id="type" name="type">
-                                <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}" th:selected="${type.id==accident.type.id}"></option>
-                            </select>
+                        <div class="row">
+                            <div class="mb-3">
+                                <label for="remark" class="form-label"><b>Примечание</b></label>
+                                <textarea class="form-control" id="remark" name="remark" rows="3" th:field="*{remark}"></textarea>
+                            </div>
                         </div>
-                        <div class="mb-2">
-                            <label for="rIds"><b>Статья</b></label>
-                            <select class="form-control" id="rIds" name="rules" multiple required>
-                                <option th:each="rule : ${rules}" th:value="${rule.id}" th:text="${rule.name}" th:selected="${accident.rules.contains(rule)}"></option>
-                            </select>
+                        <div class="row">
+                            <div class="col-9">
+                                <div class="row">
+                                    <div class="col-6"><a class="btn btn-danger w-100" th:href="@{/items/remove?(id=*{id})}">Удалить</a></div>
+                                    <div class="col-6"><button class="btn btn-primary w-100" type="submit">Сохранить</button></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-2">
-                            <label for="text"><b>Описание</b></label>
-                            <textarea class="form-control" id="text" name="text" rows="3" th:field="*{text}"></textarea>
-                        </div>
-                        <div class="mb-2">
-                            <label for="address"><b>Адрес</b></label>
-                            <input type="text" class="form-control" name="address" id="address" th:field="*{address}">
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
                     </form>
                 </div>
             </div>

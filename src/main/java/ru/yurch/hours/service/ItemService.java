@@ -44,12 +44,56 @@ public class ItemService {
         return rsl;
     }
 
+    public Optional<Item> findItemById(int id) {
+        Optional<Item> rsl = Optional.empty();
+        try {
+            rsl = itemRepository.findItemById(id);
+        } catch (Exception e) {
+            LOG.error("Error occurred while finding item by id:  " + e.getMessage());
+        }
+        return rsl;
+    }
+
     public List<Item> findItemsByDate(LocalDate startDate, LocalDate endDate, User user) {
         List<Item> rsl = Collections.emptyList();
         try {
             rsl = itemRepository.findItemsByDate(startDate, endDate, user);
         } catch (Exception e) {
             LOG.error("Error occurred while finding items:  " + e.getMessage());
+        }
+        return rsl;
+    }
+
+    public boolean update(Item item) {
+        boolean rsl = false;
+        Optional<Item> currentItem = itemRepository.findById(item.getId());
+        LOG.info("Найдена запись: " + currentItem);
+        LOG.info("Сохраняемая запись: " + item);
+        if (currentItem.isPresent()) {
+            if (!currentItem.get().equals(item)) {
+                try {
+                    itemRepository.save(item);
+                    rsl = true;
+                } catch (Exception e) {
+                    LOG.error("Произошла ошибка при обновлении записи в БД: " + e.getMessage());
+                }
+            }
+        }
+        return rsl;
+    }
+
+    public boolean delete(Item item) {
+        boolean rsl = false;
+        Optional<Item> currentItem = itemRepository.findById(item.getId());
+        LOG.info("Найдена запись: " + currentItem);
+        LOG.info("Удаляемая запись: " + item);
+        if (currentItem.isPresent()) {
+            try {
+                itemRepository.delete(item);
+                rsl = true;
+            } catch (Exception e) {
+                LOG.error("Произошла ошибка при удалении записи из БД: " + e.getMessage());
+            }
         }
         return rsl;
     }
@@ -81,8 +125,20 @@ public class ItemService {
         return content;
     }
 
+    public Map<LocalDate, List<ItemDto>> updateItemSeqNum(Map<LocalDate, List<ItemDto>> content) {
+        int index = 1;
+        for (List<ItemDto> items : content.values()) {
+            for (ItemDto itemDto : items) {
+                itemDto.setSeqNum(index);
+                index++;
+            }
+        }
+        return content;
+    }
+
     public Report updateExtraTime(List<Item> items) {
         Map<LocalDate, List<ItemDto>> content = convertToItemsDto(items);
+        content = updateItemSeqNum(content);
         var report = new Report();
         float sumOfTime = 0;
         for (List<ItemDto> list : content.values()) {

@@ -53,12 +53,48 @@ public class ItemController {
         return "items/list";
     }
 
+    @GetMapping("/update")
+    public String updateItem(
+            Model model,
+            @RequestAttribute(name = "user") User user,
+            @RequestParam(name = "id", required = false) int id) {
+        var currentUser = userService.findByName(user.getUsername());
+        if (currentUser.isPresent()) {
+            var rsl = itemService.findItemById(id);
+            if (rsl.isEmpty()) {
+                model.addAttribute("message", "Не удалось найти выбранный интервал времени по указанному Id.");
+                return "errors/404";
+            }
+            model.addAttribute("item", rsl.get());
+        }
+        return "items/edit";
+    }
+
     @GetMapping("/add")
     public String addItem(Model model) {
         model.addAttribute("currentDate", LocalDate.now());
         model.addAttribute("startTime", LocalTime.of(9, 0));
         model.addAttribute("endTime", LocalTime.now());
         return "items/new";
+    }
+
+    @GetMapping("/remove")
+    public String remove(
+            Model model,
+            @RequestAttribute(name = "user") User user,
+            @RequestParam(name = "id", required = false) int id
+    ) {
+        var currentUser = userService.findByName(user.getUsername());
+        if (currentUser.isPresent()) {
+            var item = itemService.findItemById(id).get();
+            item.setUser(userService.findByName(user.getUsername()).get());
+            var isDeleted = itemService.delete(item);
+            if (!isDeleted) {
+                model.addAttribute("message", "Не удалось удалить временной интервал.");
+                return "errors/404";
+            }
+        }
+        return "redirect:/items/find";
     }
 
     @PostMapping("/add")
@@ -78,6 +114,26 @@ public class ItemController {
         var message = String.format(
                 "Временной интервал за %s добавлен в БД.",
                 item.getDate());
+        model.addAttribute("message", message);
+        return "messages/message";
+    }
+
+    @PostMapping("/update")
+    public String updateItem(
+            @RequestAttribute(name = "user") User user,
+            @RequestParam(name = "id", required = false) int id,
+            @ModelAttribute Item item,
+            Model model
+    ) {
+        item.setUser(userService.findByName(user.getUsername()).get());
+        var isUpdated = itemService.update(item);
+        if (!isUpdated) {
+            model.addAttribute("message", "Не удалось произвести редактирование временного интервала.");
+            return "errors/404";
+        }
+        var message = String.format(
+                "Временной интервал с id=%s был успешно отредактирован.",
+                item.getId());
         model.addAttribute("message", message);
         return "messages/message";
     }

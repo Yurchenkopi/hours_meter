@@ -13,6 +13,8 @@ import java.util.Optional;
 
 @Repository
 public interface ItemRepository extends CrudRepository<Item, Integer> {
+    Optional<Item> findItemById(int id);
+
     List<Item> findItemsByDate(LocalDate date);
 
     @Query("SELECT i FROM Item i WHERE i.date BETWEEN :startDate AND :endDate AND i.user = :user")

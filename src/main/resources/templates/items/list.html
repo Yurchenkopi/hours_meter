@@ -42,14 +42,15 @@
                     <th scope="col">Время прихода</th>
                     <th scope="col">Время ухода</th>
                     <th scope="col">Обед</th>
-                    <th scope="col">Учет основного времени</th>
+                    <th scope="col">Без учета основного времени</th>
                     <th scope="col">Отработанное время, ч.</th>
+                    <th scope="col">Примечание</th>
                 </tr>
                 </thead>
                 <tbody>
                 <div th:each="entry: ${itemsDtoMap.entrySet()}">
-                    <tr th:each="item: ${entry.value}" th:href="@{/templates/items/update?id={id}(id=${item.id})}" style="cursor: pointer;">
-                        <td th:text="${item.id}"></td>
+                    <tr th:each="item: ${entry.value}" th:href="@{/items/update?id={id}(id=${item.id})}" style="cursor: pointer;">
+                        <td th:text="${item.seqNum}"></td>
                         <td th:text="${#temporals.format(item.date, 'yyyy-MM-dd')}"></td>
                         <td th:text="${#temporals.format(item.startTime, 'HH:mm')}"></td>
                         <td th:text="${#temporals.format(item.endTime, 'HH:mm')}"></td>
@@ -63,13 +64,15 @@
                         </td>
                         <td style="text-align: center;">
                         <span th:if="${!item.extraHoursOnly}">
-                            <i class="bi bi-check-square"></i>
+                            <i class="bi bi-square"></i>
                         </span>
                             <span th:if="${item.extraHoursOnly}">
-                            <i class="bi bi-square"></i>
+                            <i class="bi bi-check-square"></i>
                         </span>
                         </td>
                         <td th:text="${item.minutes/60}"></td>
+                        <td th:if="${#strings.length(item.remark) &gt;= 20}" th:text="${#strings.substring(item.remark, 0, 20) + '...'}"></td>
+                        <td th:if="${#strings.length(item.remark) &lt; 20}" th:text="${item.remark}"></td>
                     </tr>
                 </div>
                 </tbody>
