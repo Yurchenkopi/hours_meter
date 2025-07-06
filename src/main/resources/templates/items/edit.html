@@ -11,7 +11,7 @@
     <link th:href = "@{/css/bootstrap.min.css}" rel="stylesheet">
     <script th:src="@{/umd/popper.min.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
-    <title>Accidents</title>
+    <title>HoursMeter</title>
 </head>
 <body>
 <div class="container-fluid p-0">
@@ -60,13 +60,17 @@
                                 <textarea class="form-control" id="remark" name="remark" rows="3" th:field="*{remark}"></textarea>
                             </div>
                         </div>
+                        <div class="row mb-2">
+                            <a class="btn btn-secondary w-100" th:href="@{/items/remove?(id=*{id})}">
+                                Удалить&nbsp;&nbsp;&nbsp;
+                                <i class="fa fa-trash-can"></i>
+                            </a>
+                        </div>
                         <div class="row">
-                            <div class="col-9">
-                                <div class="row">
-                                    <div class="col-6"><a class="btn btn-danger w-100" th:href="@{/items/remove?(id=*{id})}">Удалить</a></div>
-                                    <div class="col-6"><button class="btn btn-primary w-100" type="submit">Сохранить</button></div>
-                                </div>
-                            </div>
+                            <button class="btn btn-primary w-100" type="submit">
+                                Сохранить&nbsp;&nbsp;&nbsp;
+                                <i class="fa fa-floppy-disk"></i>
+                            </button>
                         </div>
                     </form>
                 </div>

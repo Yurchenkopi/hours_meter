@@ -27,6 +27,24 @@ public class UserService {
         return rsl;
     }
 
+    public boolean update(User user) {
+        boolean rsl = false;
+        Optional<User> currentUser = userRepository.findById(user.getId());
+        LOG.info("Найден пользователь: " + currentUser);
+        LOG.info("Сохраняемый пользователь: " + user);
+        if (currentUser.isPresent()) {
+            if (!currentUser.get().equals(user)) {
+                try {
+                    userRepository.save(user);
+                    rsl = true;
+                } catch (Exception e) {
+                    LOG.error("Произошла ошибка при обновлении записи в БД: " + e.getMessage());
+                }
+            }
+        }
+        return rsl;
+    }
+
     public Optional<User> findByName(String userName) {
         Optional<User> rsl = Optional.empty();
         try {

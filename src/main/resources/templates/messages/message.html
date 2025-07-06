@@ -8,7 +8,7 @@
     <script th:src="@{/umd/popper.min.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
 
-    <title>Уведомление</title>
+    <title>Notification</title>
 
 </head>
 <body>
@@ -16,7 +16,7 @@
     <header th:insert="blocks/header :: header"></header>
     <div class="container">
         <h3 class="text-success" th:text="${message}"></h3>
-        <p>Произойдет автоматический переход на страницу статистики через <span id="countdown">2</span> сек...</p>
+        <p>Произойдет автоматический переход на страницу статистики через <span id="countdown">1</span> сек...</p>
     </div>
     <div class="fixed-bottom bg-light">
         <footer th:insert="blocks/footer :: footer"></footer>
@@ -24,7 +24,7 @@
 </div>
 
 <script>
-    var seconds = 2;
+    var seconds = 1;
     var countdown = setInterval(function() {
         seconds--;
         document.getElementById('countdown').innerText = seconds;

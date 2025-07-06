@@ -16,7 +16,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${user.username}"></a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" th:href="@{#}">Личные данные</a></li>
+                            <li><a class="dropdown-item" th:href="@{/users/info}">Личные данные</a></li>
                         </ul>
                     </li>
                     <a class="nav-item nav-link" th:href="@{/logout}">Выйти</a>

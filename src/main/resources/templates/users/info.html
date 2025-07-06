@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <!--  Зависимости Bootstrap-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link th:href = "@{/css/bootstrap.min.css}" rel="stylesheet">
+  <script th:src="@{/umd/popper.min.js}"></script>
+  <script th:src="@{/js/bootstrap.min.js}"></script>
+
+  <title>HoursMeter</title>
+
+  <style>
+    .table-hover tbody tr:hover {
+      background-color: #e0ecff;
+    }
+  </style>
+</head>
+<body>
+<div class="container-fluid p-0">
+  <header th:insert="blocks/header :: header"></header>
+  <form class="mt-2" th:action="@{/users/update}" method="post" enctype="multipart/form-data">
+    <div class="container">
+      <div class="row mt-5">
+        <div class="col-2">
+          <label for="username" class="form-label" style="text-align: left"><b>Имя пользователя: </b></label>
+        </div>
+        <div class="col-3">
+          <input type="text" class="form-control" id="username" name="username" th:field="${user.username}" placeholder="Имя пользователя" disabled>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-2">
+          <label for="email" class="form-label" style="text-align: left"><b>Электронная почта: </b></label>
+        </div>
+        <div class="col-3">
+          <input type="text" class="form-control" id="email" name="email" th:field="${user.email}" placeholder="Электронная почта" disabled>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-2">
+          <label for="surname" class="form-label" style="text-align: left"><b>Фамилия: </b></label>
+        </div>
+        <div class="col-3">
+          <input type="text" class="form-control" id="surname" name="surname" th:field="${user.surname}" placeholder="Фамилия">
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-2">
+          <label for="name" class="form-label" style="text-align: left"><b>Имя: </b></label>
+        </div>
+        <div class="col-3">
+          <input type="text" class="form-control" id="name" name="name" th:field="${user.name}" placeholder="Имя">
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-2">
+          <label for="patronymic" class="form-label" style="text-align: left"><b>Отчество: </b></label>
+        </div>
+        <div class="col-3">
+          <input type="text" class="form-control" id="patronymic" name="patronymic" th:field="${user.patronymic}" placeholder="Отчество">
+        </div>
+      </div>
+      <div class="row col-5 mt-2">
+        <button class="btn btn-primary w-100" type="submit">
+          Сохранить личные данные&nbsp;&nbsp;&nbsp;
+          <i class="fa fa-floppy-disk"></i>
+        </button>
+      </div>
+    </div>
+  </form>
+  <div class="fixed-bottom bg-light">
+    <footer th:insert="blocks/footer :: footer"></footer>
+  </div>
+</div>
+</body>
+</html>
