@@ -8,13 +8,13 @@
                     <a class="nav-item nav-link" href="/items/find">Статистика</a>
                     <a class="nav-item nav-link" href="/items/add">Добавить часы</a>
                 </div>
-                <div class="navbar-nav" th:if="${user == null || user.username == 'Гость'}">
+                <div class="navbar-nav" th:if="${session.user == null || session.user.username == 'Гость'}">
                     <a class="nav-item nav-link" th:href="@{/reg}">Регистрация</a>
                     <a class="nav-item nav-link" th:href="@{/login}">Войти</a>
                 </div>
-                <div class="navbar-nav" th:if="${user != null && user.username != 'Гость'}">
+                <div class="navbar-nav" th:if="${session.user != null && session.user.username != 'Гость'}">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${user.username}"></a>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${session.user.username}"></a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" th:href="@{/users/info}">Личные данные</a></li>
                         </ul>

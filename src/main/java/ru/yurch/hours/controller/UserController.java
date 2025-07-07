@@ -20,7 +20,7 @@ public class UserController {
     @GetMapping("/info")
     public String getByDate(
             Model model,
-            @RequestAttribute(name = "user") User user
+            @SessionAttribute(name = "user") User user
     ) {
         var currentUser = userService.findByName(user.getUsername());
         if (currentUser.isPresent()) {
@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping("/update")
     public String updateUser(
-            @RequestAttribute(name = "user") User user,
+            @SessionAttribute(name = "user") User user,
             @ModelAttribute User modUser,
             Model model
     ) {

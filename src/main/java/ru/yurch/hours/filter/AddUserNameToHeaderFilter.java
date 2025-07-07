@@ -34,7 +34,8 @@ public class AddUserNameToHeaderFilter extends HttpFilter {
             user.setUsername("Гость");
         }
         LOG.info("User added to session is {}", user);
-        request.setAttribute("user", user);
+//        request.setAttribute("user", user);
+        request.getSession().setAttribute("user", user);
         filterChain.doFilter(request, response);
     }
 }

@@ -27,7 +27,7 @@ public class ItemController {
     @GetMapping("/find")
     public String getByDate(
             Model model,
-            @RequestAttribute(name = "user") User user,
+            @SessionAttribute(name = "user") User user,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) {
@@ -56,7 +56,7 @@ public class ItemController {
     @GetMapping("/update")
     public String updateItem(
             Model model,
-            @RequestAttribute(name = "user") User user,
+            @SessionAttribute(name = "user") User user,
             @RequestParam(name = "id", required = false) int id) {
         var currentUser = userService.findByName(user.getUsername());
         if (currentUser.isPresent()) {
@@ -81,7 +81,7 @@ public class ItemController {
     @GetMapping("/remove")
     public String remove(
             Model model,
-            @RequestAttribute(name = "user") User user,
+            @SessionAttribute(name = "user") User user,
             @RequestParam(name = "id", required = false) int id
     ) {
         var currentUser = userService.findByName(user.getUsername());
@@ -100,7 +100,7 @@ public class ItemController {
     @PostMapping("/add")
     public String addItem(
         @ModelAttribute Item item,
-        @RequestAttribute(name = "user") User user,
+        @SessionAttribute(name = "user") User user,
         Model model
     ) {
         item.setUser(userService.findByName(user.getUsername()).get());
@@ -120,7 +120,7 @@ public class ItemController {
 
     @PostMapping("/update")
     public String updateItem(
-            @RequestAttribute(name = "user") User user,
+            @SessionAttribute(name = "user") User user,
             @RequestParam(name = "id", required = false) int id,
             @ModelAttribute Item item,
             Model model
