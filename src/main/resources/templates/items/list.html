@@ -36,6 +36,10 @@
                     Найти&nbsp;&nbsp;
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
+                <button type="button" class="btn btn-primary w-100" onclick="generateReport()">
+                    Сохранить отчёт &nbsp;&nbsp;&nbsp;
+                    <i class="fa fa-floppy-disk"></i>
+                </button>
             </form>
             <table class="table table-hover">
                 <thead>
@@ -122,12 +126,38 @@
                     </a>
                 </div>
             </div>
+            <div class="container mt-2">
+                <div class="row">
+                    <a class="btn btn-primary w-100" th:href="@{/items/generate-report}">
+                        Сохранить отчёт &nbsp;&nbsp;&nbsp;
+                        <i class="fa fa-floppy-disk"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="bg-light sticky-bottom">
         <footer th:insert="blocks/footer :: footer"></footer>
     </div>
 </div>
+<script>
+    function generateReport() {
+        // Получаем значения дат
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        // Проверяем, что даты выбраны
+        if (!startDate || !endDate) {
+            alert('Пожалуйста, выберите обе даты.');
+            return;
+        }
+
+        // Формируем URL для скачивания отчета
+        const url = `/items/generate-report?startDate=${startDate}&endDate=${endDate}`;
+
+        // Перенаправляем пользователя на URL
+        window.location.href = url;
+    }
+</script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var rows = document.querySelectorAll("tbody tr");

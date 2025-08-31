@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.yurch.hours.model.Item;
 import ru.yurch.hours.model.User;
 import ru.yurch.hours.service.ItemService;
+import ru.yurch.hours.service.ReportService;
 import ru.yurch.hours.service.UserService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -21,6 +24,7 @@ import java.time.LocalTime;
 public class ItemController {
     private final ItemService itemService;
     private final UserService userService;
+    private final ReportService reportService;
 
     private static final Logger LOG = LoggerFactory.getLogger(ItemController.class.getName());
 
@@ -96,6 +100,14 @@ public class ItemController {
         }
         return "redirect:/items/find";
     }
+
+    @GetMapping("/generate-report")
+    public void downloadReport(HttpServletResponse response) throws IOException {
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=\"report.pdf\"");
+        reportService.createPDFReport(response.getOutputStream());
+    }
+
 
     @PostMapping("/add")
     public String addItem(
