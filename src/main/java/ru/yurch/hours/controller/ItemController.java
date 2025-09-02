@@ -102,10 +102,13 @@ public class ItemController {
     }
 
     @GetMapping("/generate-report")
-    public void downloadReport(HttpServletResponse response) throws IOException {
+    public void downloadReport(
+            HttpServletResponse response,
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws IOException {
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "attachment; filename=\"report.pdf\"");
-        reportService.createPDFReport(response.getOutputStream());
+        reportService.createPDFReport(response.getOutputStream(), startDate, endDate);
     }
 
 

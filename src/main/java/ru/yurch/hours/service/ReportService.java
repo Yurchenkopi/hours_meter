@@ -13,10 +13,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDate;
 
 @Service
 public class ReportService {
-    public void createPDFReport(OutputStream os) throws IOException {
+    public void createPDFReport(OutputStream os,
+                                LocalDate startDate,
+                                LocalDate endDate) throws IOException {
         PdfWriter writer = new PdfWriter(os);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
@@ -25,6 +28,8 @@ public class ReportService {
         document.setFont(font);
         document.add(new Paragraph("Это ваш отчет!"));
         document.add(new Paragraph("Дата создания: " + java.time.LocalDate.now()));
+        document.add(new Paragraph("Начало периода: " + startDate.toString()));
+        document.add(new Paragraph("Конец периода: " + endDate.toString()));
         document.close();
     }
 }
