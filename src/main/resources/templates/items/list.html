@@ -36,10 +36,12 @@
                     Найти&nbsp;&nbsp;
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
-                <button type="button" class="btn btn-primary w-100" onclick="generateReport()">
-                    Сохранить отчёт &nbsp;&nbsp;&nbsp;
-                    <i class="fa fa-floppy-disk"></i>
-                </button>
+                <div class="mt-2">
+                    <button type="button" class="btn btn-primary w-100" onclick="generateReport()">
+                        Сохранить отчёт &nbsp;&nbsp;&nbsp;
+                        <i class="fa fa-floppy-disk"></i>
+                    </button>
+                </div>
             </form>
             <table class="table table-hover">
                 <thead>
@@ -123,14 +125,6 @@
                     <a class="btn btn-primary w-100" th:href="@{/items/add}">
                         Добавить часы &nbsp;&nbsp;&nbsp;
                         <i class="fa fa-plus"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="container mt-2">
-                <div class="row">
-                    <a class="btn btn-primary w-100" th:href="@{/items/generate-report}">
-                        Сохранить отчёт &nbsp;&nbsp;&nbsp;
-                        <i class="fa fa-floppy-disk"></i>
                     </a>
                 </div>
             </div>
