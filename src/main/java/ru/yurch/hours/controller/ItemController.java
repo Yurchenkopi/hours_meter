@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.yurch.hours.model.Item;
+import ru.yurch.hours.model.Report;
 import ru.yurch.hours.model.User;
 import ru.yurch.hours.service.ItemService;
 import ru.yurch.hours.service.ReportService;
@@ -16,7 +17,9 @@ import ru.yurch.hours.service.UserService;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequestMapping("/items")
@@ -104,11 +107,20 @@ public class ItemController {
     @GetMapping("/generate-report")
     public void downloadReport(
             HttpServletResponse response,
+            @SessionAttribute(name = "user") User user,
+            Report report,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws IOException {
+        var currentUser = userService.findByName(user.getUsername());
+        if (currentUser.isPresent()) {
+            var rsl = itemService.findItemsByDate(startDate, endDate, currentUser.get());
+            report = itemService.updateExtraTime(rsl);
+        }
+        String fileName = String.format("attachment; filename=\"%s_%s.pdf\"", currentUser.get().getSurname(), LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
         response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=\"report.pdf\"");
-        reportService.createPDFReport(response.getOutputStream(), startDate, endDate);
+        response.setHeader("Content-Disposition", fileName);
+        reportService.createPDFReport(response.getOutputStream(), report, startDate, endDate);
     }
 
 
