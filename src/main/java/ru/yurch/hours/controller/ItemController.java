@@ -120,7 +120,7 @@ public class ItemController {
                 .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", fileName);
-        reportService.createPDFReport(response.getOutputStream(), report, startDate, endDate);
+        reportService.createPDFReport(response.getOutputStream(), report, currentUser.get(), startDate, endDate);
     }
 
 
