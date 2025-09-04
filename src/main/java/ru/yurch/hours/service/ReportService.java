@@ -1,6 +1,7 @@
 package ru.yurch.hours.service;
 
 import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -9,6 +10,7 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 import org.apache.commons.io.IOUtils;
@@ -38,9 +40,30 @@ public class ReportService {
         InputStream fontStream = getClass().getResourceAsStream("/static/fonts/Arial/arialmt.ttf");
         PdfFont font = PdfFontFactory.createFont(IOUtils.toByteArray(fontStream), PdfEncodings.IDENTITY_H, true);
         document.setFont(font);
-        document.add(new Paragraph(String.format("ФИО: %s %s %s", user.getSurname(), user.getName(), user.getPatronymic())));
-        document.add(new Paragraph("Дата создания: " + java.time.LocalDate.now()));
-        document.add(new Paragraph(String.format("Период с %s по %s", startDate, endDate)));
+        document.add(new Paragraph()
+                .add(new Text("ФИО:"))
+                .add(new Text("    "))
+                .add(new Text(String.format("%s %s %s", user.getSurname(), user.getName(), user.getPatronymic()))
+                        .setBackgroundColor(ColorConstants.LIGHT_GRAY)
+                        .setBold()));
+        document.add(new Paragraph()
+                .add(new Text("Дата создания:"))
+                .add(new Text("    "))
+                .add(new Text(java.time.LocalDate.now().toString())
+                        .setBackgroundColor(ColorConstants.LIGHT_GRAY)
+                        .setBold()));
+        document.add(new Paragraph()
+                .add(new Text("Период с"))
+                .add(new Text("    "))
+                .add(new Text(startDate.toString())
+                        .setBackgroundColor(ColorConstants.LIGHT_GRAY)
+                        .setBold())
+                .add(new Text("    "))
+                .add(new Text("по"))
+                .add(new Text("    "))
+                .add(new Text(endDate.toString())
+                        .setBackgroundColor(ColorConstants.LIGHT_GRAY)
+                        .setBold()));
         float[] columnWidths = {40, 30, 30, 40};
         Table table = new Table(UnitValue.createPercentArray(columnWidths))
                 .useAllAvailableWidth();
@@ -66,8 +89,14 @@ public class ReportService {
             }
         }
         document.add(table);
-        document.add(new Paragraph("Общее время в днях: " +
-                (float) Math.round(report.getTimeInMinutes() * 100 / (60 * 8)) / 100).setFontSize(20));
+        document.add(new Paragraph()
+                .add(new Text("Общее время в днях:"))
+                        .setFontSize(20)
+                .add(new Text("    "))
+                .add(new Text(String.valueOf(
+                        (float) Math.round(report.getTimeInMinutes() * 100 / (60 * 8)) / 100))
+                        .setBackgroundColor(ColorConstants.LIGHT_GRAY)
+                        .setFontSize(20)));
         document.close();
     }
 }
