@@ -1,5 +1,6 @@
 package ru.yurch.hours.controller;
 
+import com.ibm.icu.text.Transliterator;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ public class ItemController {
     private final ReportService reportService;
 
     private static final Logger LOG = LoggerFactory.getLogger(ItemController.class.getName());
+    private static final Transliterator CYR_TO_LAT = Transliterator.getInstance("Russian-Latin/BGN");
 
     @GetMapping("/find")
     public String getByDate(
@@ -111,13 +113,15 @@ public class ItemController {
             Report report,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws IOException {
+
         var currentUser = userService.findByName(user.getUsername());
         if (currentUser.isPresent()) {
             var rsl = itemService.findItemsByDate(startDate, endDate, currentUser.get());
             report = itemService.updateExtraTime(rsl);
         }
-        String fileName = String.format("attachment; filename=\"%s_%s.pdf\"", currentUser.get().getSurname(), LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
+        String fileName = String.format("attachment; filename=\"%s_%s.pdf\"",
+                CYR_TO_LAT.transliterate(currentUser.get().getSurname()),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", fileName);
         reportService.createPDFReport(response.getOutputStream(), report, currentUser.get(), startDate, endDate);
