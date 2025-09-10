@@ -35,4 +35,8 @@ public class User {
     private String password;
 
     private boolean enabled;
+
+    @ManyToOne
+    @JoinColumn(name = "report_settings_id")
+    private ReportSetting reportSettings;
 }

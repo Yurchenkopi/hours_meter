@@ -9,4 +9,8 @@
     <include file="scripts/004_dml_insert_into_authorities.sql" relativeToChangelogFile="true"/>
     <include file="scripts/005_dml_insert_into_users.sql" relativeToChangelogFile="true"/>
     <include file="scripts/006_dml_insert_into_items.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/007_ddl_create_report_settings_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/008_dml_insert_into_report_settings.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/009_ddl_add_column_into_users_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/010_dml_update_users_table.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>
