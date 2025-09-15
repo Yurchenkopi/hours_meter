@@ -38,5 +38,5 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "report_settings_id")
-    private ReportSetting reportSettings;
+    private ReportSetting reportSetting;
 }

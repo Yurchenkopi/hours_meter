@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.yurch.hours.model.ReportSetting;
 import ru.yurch.hours.model.User;
+import ru.yurch.hours.service.ReportSettingService;
 import ru.yurch.hours.service.UserService;
 
 @Controller
@@ -14,6 +16,7 @@ import ru.yurch.hours.service.UserService;
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final ReportSettingService reportSettingService;
 
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class.getName());
 
@@ -27,6 +30,18 @@ public class UserController {
             model.addAttribute("user", currentUser.get());
         }
         return "users/info";
+    }
+
+    @GetMapping("/reportSetting")
+    public String getReportSetting(
+            Model model,
+            @SessionAttribute(name = "user") User user
+    ) {
+        var currentUser = userService.findByName(user.getUsername());
+        if (currentUser.isPresent()) {
+            model.addAttribute("user", currentUser.get());
+        }
+        return "users/reportSetting";
     }
 
 
@@ -47,7 +62,8 @@ public class UserController {
                 modUser.getPatronymic(),
                 modUser.getSurname(),
                 sessUser.getPassword(),
-                sessUser.isEnabled()
+                sessUser.isEnabled(),
+                modUser.getReportSetting()
         );
         var isUpdated = userService.update(tempUser);
         if (!isUpdated) {
@@ -60,6 +76,5 @@ public class UserController {
         model.addAttribute("message", message);
         return "messages/message";
     }
-
 
 }
