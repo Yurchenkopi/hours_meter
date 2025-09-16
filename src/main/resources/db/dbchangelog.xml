@@ -13,4 +13,8 @@
     <include file="scripts/008_dml_insert_into_report_settings.sql" relativeToChangelogFile="true"/>
     <include file="scripts/009_ddl_add_column_into_users_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/010_dml_update_users_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/011_dml_update_users_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/012_ddl_add_constraint_into_users_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/013_dml_update_report_setting_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/014_dml_update_users_table.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

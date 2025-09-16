@@ -8,24 +8,30 @@ import javax.persistence.*;
 @Entity
 @Table(name = "report_settings")
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
 public class ReportSetting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private int id;
 
-    private boolean date_column;
+    @Column(name = "date_column")
+    private boolean dateColumn;
 
-    private boolean startTime_column;
+    @Column(name = "start_time_column")
+    private boolean startTimeColumn;
 
-    private boolean endTime_column;
+    @Column(name = "end_time_column")
+    private boolean endTimeColumn;
 
-    private boolean lunchBreak_column;
+    @Column(name = "lunch_break_column")
+    private boolean lunchBreakColumn;
 
-    private boolean extraHoursOnly_column;
+    @Column(name = "extra_hours_only_column")
+    private boolean extraHoursOnlyColumn;
 
-    private boolean remark_column;
+    @Column(name = "remark_column")
+    private boolean remarkColumn;
 
-    private boolean hours_column;
+    @Column(name = "hours_column")
+    private boolean hoursColumn;
 }

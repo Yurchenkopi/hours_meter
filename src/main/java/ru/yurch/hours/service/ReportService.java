@@ -17,6 +17,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 import ru.yurch.hours.dto.ItemDto;
 import ru.yurch.hours.model.Report;
+import ru.yurch.hours.model.ReportSetting;
 import ru.yurch.hours.model.User;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -64,28 +65,45 @@ public class ReportService {
                 .add(new Text(endDate.toString())
                         .setBackgroundColor(ColorConstants.LIGHT_GRAY)
                         .setBold()));
-        float[] columnWidths = {40, 30, 30, 40};
-        Table table = new Table(UnitValue.createPercentArray(columnWidths))
+        Table table = new Table(UnitValue.createPercentArray(getReportSize(user.getReportSetting())))
                 .useAllAvailableWidth();
-        String[] headers = {
-                "Дата", "Время начала", "Время окончания", "Доп.время, дней"
-        };
-        for (String h : headers) {
-            table.addHeaderCell(
-                    new Cell()
-                            .add(new Paragraph(h).setBold())
-                            .setTextAlignment(TextAlignment.CENTER)
-            );
+        var userReportSettings = getReportSettingMap(user.getReportSetting());
+        for (String header : userReportSettings.keySet()) {
+            if (userReportSettings.get(header)) {
+                table.addHeaderCell(
+                        new Cell()
+                                .add(new Paragraph(header).setBold())
+                                .setTextAlignment(TextAlignment.CENTER)
+                );
+            }
         }
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
         for (List<ItemDto> items : report.getContent().values()) {
             for (ItemDto item : items) {
-                table.addCell(new Cell().add(new Paragraph(item.getDate().format(df))));
-                table.addCell(new Cell().add(new Paragraph(item.getStartTime().format(tf))));
-                table.addCell(new Cell().add(new Paragraph(item.getEndTime().format(tf))));
-                table.addCell(new Cell().add(new Paragraph(String.format("%.2f",
-                        (float) Math.round(item.getMinutes() * 100 / (60 * 8)) / 100))));
+                if (user.getReportSetting().isDateColumn()) {
+                    table.addCell(new Cell().add(new Paragraph(item.getDate().format(df))));
+                }
+                if (user.getReportSetting().isStartTimeColumn()) {
+                    table.addCell(new Cell().add(new Paragraph(item.getStartTime().format(tf))));
+                }
+                if (user.getReportSetting().isEndTimeColumn()) {
+                    table.addCell(new Cell().add(new Paragraph(item.getEndTime().format(tf))));
+                }
+                if (user.getReportSetting().isLunchBreakColumn()) {
+                    table.addCell(new Cell().add(new Paragraph(item.isLunchBreak() ? "Да" : "Нет")));
+                }
+                if (user.getReportSetting().isExtraHoursOnlyColumn()) {
+                    table.addCell(new Cell().add(new Paragraph(item.isExtraHoursOnly() ? "Да" : "Нет")));
+                }
+                if (user.getReportSetting().isRemarkColumn()) {
+                    table.addCell(new Cell().add(new Paragraph(item.getRemark())));
+                }
+                if (user.getReportSetting().isHoursColumn()) {
+                    table.addCell(new Cell().add(new Paragraph(String.format("%.2f",
+                            (float) Math.round(item.getMinutes() * 100 / (60 * 8)) / 100))));
+                }
+
             }
         }
         document.add(table);
@@ -98,5 +116,55 @@ public class ReportService {
                         .setBackgroundColor(ColorConstants.LIGHT_GRAY)
                         .setFontSize(20)));
         document.close();
+    }
+
+    private float[] getReportSize(ReportSetting reportSetting) {
+        int size = 0;
+        var temp = new ArrayList<Float>();
+        if (reportSetting.isDateColumn()) {
+            size++;
+            temp.add(40f);
+        }
+        if (reportSetting.isStartTimeColumn()) {
+            size++;
+            temp.add(30f);
+        }
+        if (reportSetting.isEndTimeColumn()) {
+            size++;
+            temp.add(30f);
+        }
+        if (reportSetting.isLunchBreakColumn()) {
+            size++;
+            temp.add(20f);
+        }
+        if (reportSetting.isExtraHoursOnlyColumn()) {
+            size++;
+            temp.add(20f);
+        }
+        if (reportSetting.isRemarkColumn()) {
+            size++;
+            temp.add(40f);
+        }
+        if (reportSetting.isHoursColumn()) {
+            size++;
+            temp.add(30f);
+        }
+        float[] array = new float[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = temp.get(i);
+        }
+        return array;
+    }
+
+    private Map<String, Boolean> getReportSettingMap(ReportSetting reportSetting) {
+        Map<String, Boolean> map = new LinkedHashMap<>();
+        map.put("Дата", reportSetting.isDateColumn());
+        map.put("Время начала", reportSetting.isStartTimeColumn());
+        map.put("Время окончания", reportSetting.isEndTimeColumn());
+        map.put("Обеденный перерыв", reportSetting.isLunchBreakColumn());
+        map.put("Без учета основного времени", reportSetting.isExtraHoursOnlyColumn());
+        map.put("Примечание", reportSetting.isRemarkColumn());
+        map.put("Доп.время, дней", reportSetting.isHoursColumn());
+        return map;
     }
 }
