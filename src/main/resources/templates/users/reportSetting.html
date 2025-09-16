@@ -41,6 +41,7 @@
           <input type="text" class="form-control" id="email" name="email" th:field="*{email}" placeholder="Электронная почта" disabled>
         </div>
       </div>
+      <input type="hidden" th:field="*{reportSetting.id}">
       <div class="row mt-5">
         <div class="col-2">
           <label class="form-label" th:for="*{reportSetting.dateColumn}"><b>Дата: </b></label>
@@ -53,6 +54,22 @@
         <div class="col-2">
           <label class="form-label" th:for="*{reportSetting.endTimeColumn}"><b>Время ухода: </b></label>
           <input type="checkbox" class="form-check-input" th:field="*{reportSetting.endTimeColumn}">
+        </div>
+        <div class="col-2">
+          <label class="form-label" th:for="*{reportSetting.lunchBreakColumn}"><b>Обеденный перерыв: </b></label>
+          <input type="checkbox" class="form-check-input" th:field="*{reportSetting.lunchBreakColumn}">
+        </div>
+        <div class="col-2">
+          <label class="form-label" th:for="*{reportSetting.extraHoursOnlyColumn}"><b>Без учета осн.времени: </b></label>
+          <input type="checkbox" class="form-check-input" th:field="*{reportSetting.extraHoursOnlyColumn}">
+        </div>
+        <div class="col-2">
+          <label class="form-label" th:for="*{reportSetting.remarkColumn}"><b>Примечание: </b></label>
+          <input type="checkbox" class="form-check-input" th:field="*{reportSetting.remarkColumn}">
+        </div>
+        <div class="col-2">
+          <label class="form-label" th:for="*{reportSetting.hoursColumn}"><b>Доп.отраб.время: </b></label>
+          <input type="checkbox" class="form-check-input" th:field="*{reportSetting.hoursColumn}">
         </div>
       </div>
       <div class="row col-5 mt-2">

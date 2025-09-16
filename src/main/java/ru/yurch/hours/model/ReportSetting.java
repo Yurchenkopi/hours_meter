@@ -8,11 +8,10 @@ import javax.persistence.*;
 @Entity
 @Table(name = "report_settings")
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
 public class ReportSetting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private int id;
 
     @Column(name = "date_column")
