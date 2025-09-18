@@ -36,7 +36,7 @@ public class User {
 
     private boolean enabled;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "report_settings_id")
     private ReportSetting reportSetting;
 }

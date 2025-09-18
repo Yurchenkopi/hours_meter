@@ -23,7 +23,7 @@
 <body>
 <div class="container-fluid p-0">
   <header th:insert="blocks/header :: header"></header>
-  <form class="mt-2" th:action="@{/users/update}" th:object="${user}" method="post">
+  <form class="mt-2" th:action="@{/users/updateReportSetting}" th:object="${user}" method="post">
     <div class="container">
       <div class="row mt-5">
         <div class="col-2">
@@ -41,40 +41,69 @@
           <input type="text" class="form-control" id="email" name="email" th:field="*{email}" placeholder="Электронная почта" disabled>
         </div>
       </div>
-      <input type="hidden" th:field="*{reportSetting.id}">
       <div class="row mt-5">
+        <p><b>Включить в отчет следующие данные:</b></p>
+      </div>
+      <input type="hidden" th:field="*{reportSetting.id}">
+      <div class="row mt-2">
         <div class="col-2">
-          <label class="form-label" th:for="*{reportSetting.dateColumn}"><b>Дата: </b></label>
-          <input type="checkbox" class="form-check-input" th:field="*{reportSetting.dateColumn}">
+          <label class="form-label" for="reportSetting.dateColumn"><b>Дата: </b></label>
         </div>
         <div class="col-2">
-          <label class="form-label" th:for="*{reportSetting.startTimeColumn}"><b>Время прихода: </b></label>
-          <input type="checkbox" class="form-check-input" th:field="*{reportSetting.startTimeColumn}">
-        </div>
-        <div class="col-2">
-          <label class="form-label" th:for="*{reportSetting.endTimeColumn}"><b>Время ухода: </b></label>
-          <input type="checkbox" class="form-check-input" th:field="*{reportSetting.endTimeColumn}">
-        </div>
-        <div class="col-2">
-          <label class="form-label" th:for="*{reportSetting.lunchBreakColumn}"><b>Обеденный перерыв: </b></label>
-          <input type="checkbox" class="form-check-input" th:field="*{reportSetting.lunchBreakColumn}">
-        </div>
-        <div class="col-2">
-          <label class="form-label" th:for="*{reportSetting.extraHoursOnlyColumn}"><b>Без учета осн.времени: </b></label>
-          <input type="checkbox" class="form-check-input" th:field="*{reportSetting.extraHoursOnlyColumn}">
-        </div>
-        <div class="col-2">
-          <label class="form-label" th:for="*{reportSetting.remarkColumn}"><b>Примечание: </b></label>
-          <input type="checkbox" class="form-check-input" th:field="*{reportSetting.remarkColumn}">
-        </div>
-        <div class="col-2">
-          <label class="form-label" th:for="*{reportSetting.hoursColumn}"><b>Доп.отраб.время: </b></label>
-          <input type="checkbox" class="form-check-input" th:field="*{reportSetting.hoursColumn}">
+          <input type="checkbox" class="form-check-input" id="reportSetting.dateColumn" th:field="*{reportSetting.dateColumn}">
         </div>
       </div>
-      <div class="row col-5 mt-2">
+      <div class="row">
+        <div class="col-2">
+          <label class="form-label" for="reportSetting.startTimeColumn"><b>Время прихода: </b></label>
+        </div>
+        <div class="col-2">
+          <input type="checkbox" class="form-check-input" id="reportSetting.startTimeColumn" th:field="*{reportSetting.startTimeColumn}">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <label class="form-label" for="reportSetting.endTimeColumn"><b>Время ухода: </b></label>
+        </div>
+        <div class="col-2">
+          <input type="checkbox" class="form-check-input" id="reportSetting.endTimeColumn" th:field="*{reportSetting.endTimeColumn}">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <label class="form-label" for="reportSetting.lunchBreakColumn"><b>Обеденный перерыв: </b></label>
+        </div>
+        <div class="col-2">
+          <input type="checkbox" class="form-check-input" id="reportSetting.lunchBreakColumn" th:field="*{reportSetting.lunchBreakColumn}">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <label class="form-label" for="reportSetting.extraHoursOnlyColumn"><b>Без учета осн.времени: </b></label>
+        </div>
+        <div class="col-2">
+          <input type="checkbox" class="form-check-input" id="reportSetting.extraHoursOnlyColumn" th:field="*{reportSetting.extraHoursOnlyColumn}">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <label class="form-label" for="reportSetting.remarkColumn"><b>Примечание: </b></label>
+        </div>
+        <div class="col-2">
+          <input type="checkbox" class="form-check-input" id="reportSetting.remarkColumn" th:field="*{reportSetting.remarkColumn}">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <label class="form-label" for="reportSetting.hoursColumn"><b>Доп.отраб.время: </b></label>
+        </div>
+        <div class="col-2">
+          <input type="checkbox" class="form-check-input" id="reportSetting.hoursColumn" th:field="*{reportSetting.hoursColumn}">
+        </div>
+      </div>
+      <div class="row col-5 mt-3">
         <button class="btn btn-primary w-100" type="submit">
-          Сохранить личные данные&nbsp;&nbsp;&nbsp;
+          Сохранить настройки&nbsp;&nbsp;&nbsp;
           <i class="fa fa-floppy-disk"></i>
         </button>
       </div>
