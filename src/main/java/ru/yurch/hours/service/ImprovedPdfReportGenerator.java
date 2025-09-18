@@ -312,7 +312,7 @@ public class ImprovedPdfReportGenerator {
      */
     public static void main(String[] args) {
         try {
-            createImprovedPDFReport("C:\\projects\\hours_meter\\src\\main\\java\\ru\\yurch\\hours\\aa.pdf");
+            createImprovedPDFReport(".\\aa.pdf");
         } catch (Exception e) {
             System.err.println("Ошибка при создании PDF: " + e.getMessage());
             e.printStackTrace();

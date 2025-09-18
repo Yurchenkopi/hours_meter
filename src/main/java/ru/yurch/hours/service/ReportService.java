@@ -9,12 +9,15 @@ import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Text;
+import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
+import com.itextpdf.layout.property.VerticalAlignment;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 import ru.yurch.hours.dto.ItemDto;
@@ -32,14 +35,15 @@ import java.util.*;
 
 @Service
 public class ReportService {
-    private static final float MAIN_FONT_SIZE = 12f;           // Основной размер шрифта
+    private static final float MAIN_FONT_SIZE = 14f;           // Основной размер шрифта
     private static final float HEADER_FONT_SIZE = 16f;         // Размер шрифта заголовков
-    private static final float TITLE_FONT_SIZE = 20f;          // Размер шрифта главного заголовка
+    private static final float TABLE_FONT_SIZE = 13f;          // Размер шрифта главного заголовка
     private static final float CHARACTER_SPACING = 1.5f;       // Расстояние между символами
     private static final float WORD_SPACING = 2f;              // Расстояние между словами
-    private static final float LINE_SPACING = 1.2f;            // Межстрочный интервал
+    private static final float LINE_SPACING = 1.0f;            // Межстрочный интервал
     private static final float PARAGRAPH_SPACING = 10f;        // Отступы между абзацами
     private static final DeviceRgb DEFAULT_HEADER_COLOR = new DeviceRgb(173, 181, 189);
+    private static final DeviceRgb BLUE_HEADER_COLOR = new DeviceRgb(13, 110, 253);
 
     public void createPDFReport(OutputStream os,
                                 Report report,
@@ -49,7 +53,7 @@ public class ReportService {
         PdfWriter writer = new PdfWriter(os);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
-        document.setMargins(50, 50, 50, 50);
+        document.setMargins(25, 50, 50, 25);
         InputStream fontStream = getClass().getResourceAsStream("/static/fonts/TimesNewRoman/timesnewromanpsmt.ttf");
         PdfFont font = PdfFontFactory.createFont(IOUtils.toByteArray(fontStream), PdfEncodings.IDENTITY_H, true);
         document.setFont(font);
@@ -58,27 +62,61 @@ public class ReportService {
                 HEADER_FONT_SIZE,
                 TextAlignment.LEFT
         );
-        document.add(userDataParagraph
-                .add("ФИО:")
-                .add("    ")
-                .add(new Text(String.format("%s %s %s", user.getSurname(), user.getName(), user.getPatronymic()))
-                        .setBackgroundColor(DEFAULT_HEADER_COLOR))
-                .add(System.lineSeparator())
-                .add(new Text("Дата создания:"))
-                .add(new Text("    "))
-                .add(new Text(java.time.LocalDate.now().toString())
-                        .setBackgroundColor(DEFAULT_HEADER_COLOR))
-                .add(System.lineSeparator())
-                .add(new Text("Период с"))
-                .add(new Text("    "))
-                .add(new Text(startDate.toString())
-                        .setBackgroundColor(DEFAULT_HEADER_COLOR))
-                .add(new Text("    "))
-                .add(new Text("по"))
-                .add(new Text("    "))
-                .add(new Text(endDate.toString())
-                        .setBackgroundColor(DEFAULT_HEADER_COLOR))
-        );
+        float[] headerTableColumnWidths = {35f, 65f}; // Пропорциональные ширины колонок
+        Table headerTable = new Table(UnitValue.createPercentArray(headerTableColumnWidths));
+        headerTable.setWidth(UnitValue.createPercentValue(70));
+        Cell fioCell = new Cell();
+        Cell fioDataCell = new Cell();
+        Cell dateCell = new Cell();
+        Cell dateDataCell = new Cell();
+        Cell timeCell = new Cell();
+        Cell timeDataCell = new Cell();
+
+        fioCell.add(createStyledParagraph(font, MAIN_FONT_SIZE, TextAlignment.LEFT)
+                        .add("ФИО"))
+                .setBorder(new SolidBorder(ColorConstants.WHITE, 1))
+                .setPaddingLeft(5f)
+                .setBackgroundColor(DEFAULT_HEADER_COLOR);
+        fioDataCell.add(createStyledParagraph(font, MAIN_FONT_SIZE, TextAlignment.LEFT)
+                        .add(String.format("   %s %s %s   ", user.getSurname(), user.getName(), user.getPatronymic()))
+                        .setFontColor(ColorConstants.BLACK))
+                .setBorder(new SolidBorder(ColorConstants.WHITE, 1))
+                .setPaddingLeft(5f)
+                .setBackgroundColor(DEFAULT_HEADER_COLOR);
+        dateCell.add(createStyledParagraph(font, MAIN_FONT_SIZE, TextAlignment.LEFT)
+                        .add("Дата создания"))
+                .setBorder(new SolidBorder(ColorConstants.WHITE, 1))
+                .setPaddingLeft(5f)
+                .setBackgroundColor(DEFAULT_HEADER_COLOR);
+        dateDataCell.add(createStyledParagraph(font, MAIN_FONT_SIZE, TextAlignment.LEFT)
+                        .add(String.format("   %s   ", java.time.LocalDate.now()))
+                        .setFontColor(ColorConstants.BLACK))
+                .setBorder(new SolidBorder(ColorConstants.WHITE, 1))
+                .setPaddingLeft(5f)
+                .setBackgroundColor(DEFAULT_HEADER_COLOR);
+        timeCell.add(createStyledParagraph(font, MAIN_FONT_SIZE, TextAlignment.LEFT)
+                        .add("Период"))
+                .setBorder(new SolidBorder(ColorConstants.WHITE, 1))
+                .setPaddingLeft(5f)
+                .setBackgroundColor(DEFAULT_HEADER_COLOR);
+        timeDataCell.add(createStyledParagraph(font, MAIN_FONT_SIZE, TextAlignment.LEFT)
+                        .add(String.format("c %s по %s", startDate, endDate))
+                        .setFontColor(ColorConstants.BLACK))
+                .setBorder(new SolidBorder(ColorConstants.WHITE, 1))
+                .setPaddingLeft(5f)
+                .setBackgroundColor(DEFAULT_HEADER_COLOR);
+
+        headerTable.addCell(fioCell)
+                .addCell(fioDataCell)
+                .addCell(dateCell)
+                .addCell(dateDataCell)
+                .addCell(timeCell)
+                .addCell(timeDataCell);
+        document.add(headerTable);
+        document.add(new Paragraph())
+                .add(new Paragraph())
+                .add(new Paragraph());
+
         Table table = new Table(UnitValue.createPercentArray(getReportSize(user.getReportSetting())))
                 .useAllAvailableWidth();
         var userReportSettings = getReportSettingMap(user.getReportSetting());
@@ -86,8 +124,13 @@ public class ReportService {
             if (userReportSettings.get(header)) {
                 table.addHeaderCell(
                         new Cell()
-                                .add(new Paragraph(header).setBold())
+                                .add(createStyledParagraph(font, TABLE_FONT_SIZE, TextAlignment.LEFT)
+                                        .add(header))
+                                .setBorder(new SolidBorder(ColorConstants.BLACK, 1))
+                                .setPaddingLeft(5f)
+                                .setBackgroundColor(DEFAULT_HEADER_COLOR)
                                 .setTextAlignment(TextAlignment.CENTER)
+                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
                 );
             }
         }
@@ -96,39 +139,97 @@ public class ReportService {
         for (List<ItemDto> items : report.getContent().values()) {
             for (ItemDto item : items) {
                 if (user.getReportSetting().isDateColumn()) {
-                    table.addCell(new Cell().add(new Paragraph(item.getDate().format(df))));
+                    table.addCell(new Cell()
+                            .add(createStyledParagraph(font, TABLE_FONT_SIZE, TextAlignment.LEFT)
+                                    .add(new Paragraph(item.getDate().format(df))))
+                            .setBorder(new SolidBorder(ColorConstants.BLACK, 1))
+                            .setPaddingLeft(5f)
+                            .setTextAlignment(TextAlignment.LEFT)
+                    );
                 }
                 if (user.getReportSetting().isStartTimeColumn()) {
-                    table.addCell(new Cell().add(new Paragraph(item.getStartTime().format(tf))));
+                    table.addCell(new Cell()
+                            .add(createStyledParagraph(font, TABLE_FONT_SIZE, TextAlignment.LEFT)
+                                    .add(new Paragraph(item.getStartTime().format(tf))))
+                            .setBorder(new SolidBorder(ColorConstants.BLACK, 1))
+                            .setPaddingLeft(3f)
+                            .setTextAlignment(TextAlignment.LEFT)
+                    );
                 }
                 if (user.getReportSetting().isEndTimeColumn()) {
-                    table.addCell(new Cell().add(new Paragraph(item.getEndTime().format(tf))));
+                    table.addCell(new Cell()
+                            .add(createStyledParagraph(font, TABLE_FONT_SIZE, TextAlignment.LEFT)
+                                    .add(new Paragraph(item.getEndTime().format(tf))))
+                            .setBorder(new SolidBorder(ColorConstants.BLACK, 1))
+                            .setPaddingLeft(3f)
+                            .setTextAlignment(TextAlignment.LEFT)
+                    );
                 }
                 if (user.getReportSetting().isLunchBreakColumn()) {
-                    table.addCell(new Cell().add(new Paragraph(item.isLunchBreak() ? "Да" : "Нет")));
+                    table.addCell(new Cell()
+                            .add(createStyledParagraph(font, TABLE_FONT_SIZE, TextAlignment.LEFT)
+                                    .add(new Paragraph(item.isLunchBreak() ? "Да" : "Нет")))
+                            .setBorder(new SolidBorder(ColorConstants.BLACK, 1))
+                            .setPaddingLeft(3f)
+                            .setTextAlignment(TextAlignment.LEFT)
+                    );
                 }
                 if (user.getReportSetting().isExtraHoursOnlyColumn()) {
-                    table.addCell(new Cell().add(new Paragraph(item.isExtraHoursOnly() ? "Да" : "Нет")));
+                    table.addCell(new Cell()
+                            .add(createStyledParagraph(font, TABLE_FONT_SIZE, TextAlignment.LEFT)
+                                    .add(new Paragraph(item.isExtraHoursOnly() ? "Да" : "Нет")))
+                            .setBorder(new SolidBorder(ColorConstants.BLACK, 1))
+                            .setPaddingLeft(3f)
+                            .setTextAlignment(TextAlignment.LEFT)
+                    );
                 }
                 if (user.getReportSetting().isRemarkColumn()) {
-                    table.addCell(new Cell().add(new Paragraph(item.getRemark())));
+                    table.addCell(new Cell()
+                            .add(createStyledParagraph(font, TABLE_FONT_SIZE, TextAlignment.LEFT)
+                                    .add(new Paragraph(item.getRemark())))
+                            .setBorder(new SolidBorder(ColorConstants.BLACK, 1))
+                            .setPaddingLeft(3f)
+                            .setTextAlignment(TextAlignment.LEFT)
+                    );
                 }
                 if (user.getReportSetting().isHoursColumn()) {
-                    table.addCell(new Cell().add(new Paragraph(String.format("%.2f",
-                            (float) Math.round(item.getMinutes() * 100 / (60 * 8)) / 100))));
+                    table.addCell(new Cell()
+                            .add(createStyledParagraph(font, TABLE_FONT_SIZE, TextAlignment.LEFT)
+                                    .add(new Paragraph(String.format("%.2f",
+                            (float) Math.round(item.getMinutes() * 100 / (60 * 8)) / 100))))
+                            .setBorder(new SolidBorder(ColorConstants.BLACK, 1))
+                            .setPaddingLeft(3f)
+                            .setTextAlignment(TextAlignment.LEFT)
+                    );
                 }
 
             }
         }
         document.add(table);
-        document.add(new Paragraph()
-                .add(new Text("Общее время в днях:"))
-                        .setFontSize(20)
-                .add(new Text("    "))
-                .add(new Text(String.valueOf(
-                        (float) Math.round(report.getTimeInMinutes() * 100 / (60 * 8)) / 100))
-                        .setBackgroundColor(ColorConstants.LIGHT_GRAY)
-                        .setFontSize(20)));
+        document.add(new Paragraph())
+                .add(new Paragraph());
+        float[] hoursTableColumnWidths = {65f, 35f};
+        Table hoursTable = new Table(UnitValue.createPercentArray(hoursTableColumnWidths));
+        hoursTable.setWidth(UnitValue.createPercentValue(50));
+        Cell hoursCell = new Cell();
+        Cell hoursDataCell = new Cell();
+
+        hoursCell.add(createStyledParagraph(font, MAIN_FONT_SIZE, TextAlignment.LEFT)
+                        .add("Общее время, дней"))
+                .setBorder(new SolidBorder(ColorConstants.BLACK, 1))
+                .setPaddingLeft(5f)
+                .setBackgroundColor(DEFAULT_HEADER_COLOR);
+        hoursDataCell.add(createStyledParagraph(font, MAIN_FONT_SIZE, TextAlignment.LEFT)
+                        .add(String.valueOf(
+                                (float) Math.round(report.getTimeInMinutes() * 100 / (60 * 8)) / 100))
+                        .setFontColor(ColorConstants.BLACK))
+                .setBorder(new SolidBorder(ColorConstants.BLACK, 1))
+                .setPaddingLeft(5f)
+                .setBackgroundColor(DEFAULT_HEADER_COLOR);
+        document.add(hoursTable
+                        .addCell(hoursCell)
+                        .addCell(hoursDataCell)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT));
         document.close();
     }
 
