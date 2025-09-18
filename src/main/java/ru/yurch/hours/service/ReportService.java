@@ -1,7 +1,9 @@
 package ru.yurch.hours.service;
 
 import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -30,6 +32,15 @@ import java.util.*;
 
 @Service
 public class ReportService {
+    private static final float MAIN_FONT_SIZE = 12f;           // Основной размер шрифта
+    private static final float HEADER_FONT_SIZE = 16f;         // Размер шрифта заголовков
+    private static final float TITLE_FONT_SIZE = 20f;          // Размер шрифта главного заголовка
+    private static final float CHARACTER_SPACING = 1.5f;       // Расстояние между символами
+    private static final float WORD_SPACING = 2f;              // Расстояние между словами
+    private static final float LINE_SPACING = 1.2f;            // Межстрочный интервал
+    private static final float PARAGRAPH_SPACING = 10f;        // Отступы между абзацами
+    private static final DeviceRgb DEFAULT_HEADER_COLOR = new DeviceRgb(173, 181, 189);
+
     public void createPDFReport(OutputStream os,
                                 Report report,
                                 User user,
@@ -38,33 +49,36 @@ public class ReportService {
         PdfWriter writer = new PdfWriter(os);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
-        InputStream fontStream = getClass().getResourceAsStream("/static/fonts/Arial/arialmt.ttf");
+        document.setMargins(50, 50, 50, 50);
+        InputStream fontStream = getClass().getResourceAsStream("/static/fonts/TimesNewRoman/timesnewromanpsmt.ttf");
         PdfFont font = PdfFontFactory.createFont(IOUtils.toByteArray(fontStream), PdfEncodings.IDENTITY_H, true);
         document.setFont(font);
-        document.add(new Paragraph()
-                .add(new Text("ФИО:"))
-                .add(new Text("    "))
+        Paragraph userDataParagraph = createStyledParagraph(
+                font,
+                HEADER_FONT_SIZE,
+                TextAlignment.LEFT
+        );
+        document.add(userDataParagraph
+                .add("ФИО:")
+                .add("    ")
                 .add(new Text(String.format("%s %s %s", user.getSurname(), user.getName(), user.getPatronymic()))
-                        .setBackgroundColor(ColorConstants.LIGHT_GRAY)
-                        .setBold()));
-        document.add(new Paragraph()
+                        .setBackgroundColor(DEFAULT_HEADER_COLOR))
+                .add(System.lineSeparator())
                 .add(new Text("Дата создания:"))
                 .add(new Text("    "))
                 .add(new Text(java.time.LocalDate.now().toString())
-                        .setBackgroundColor(ColorConstants.LIGHT_GRAY)
-                        .setBold()));
-        document.add(new Paragraph()
+                        .setBackgroundColor(DEFAULT_HEADER_COLOR))
+                .add(System.lineSeparator())
                 .add(new Text("Период с"))
                 .add(new Text("    "))
                 .add(new Text(startDate.toString())
-                        .setBackgroundColor(ColorConstants.LIGHT_GRAY)
-                        .setBold())
+                        .setBackgroundColor(DEFAULT_HEADER_COLOR))
                 .add(new Text("    "))
                 .add(new Text("по"))
                 .add(new Text("    "))
                 .add(new Text(endDate.toString())
-                        .setBackgroundColor(ColorConstants.LIGHT_GRAY)
-                        .setBold()));
+                        .setBackgroundColor(DEFAULT_HEADER_COLOR))
+        );
         Table table = new Table(UnitValue.createPercentArray(getReportSize(user.getReportSetting())))
                 .useAllAvailableWidth();
         var userReportSettings = getReportSettingMap(user.getReportSetting());
@@ -116,6 +130,29 @@ public class ReportService {
                         .setBackgroundColor(ColorConstants.LIGHT_GRAY)
                         .setFontSize(20)));
         document.close();
+    }
+
+    private static Paragraph createStyledParagraph(PdfFont font,
+                                                   float fontSize, TextAlignment alignment) {
+        Paragraph paragraph = new Paragraph();
+
+        // Установка основных параметров шрифта
+        paragraph.setFont(font);
+        paragraph.setFontSize(fontSize);
+        paragraph.setTextAlignment(alignment);
+
+        // Улучшенные настройки для читаемости
+        paragraph.setCharacterSpacing(CHARACTER_SPACING);  // Расстояние между символами
+        paragraph.setWordSpacing(WORD_SPACING);            // Расстояние между словами
+        paragraph.setMultipliedLeading(LINE_SPACING);      // Межстрочный интервал
+
+        // Настройка отступов для лучшего визуального восприятия
+        if (alignment == TextAlignment.JUSTIFIED) {
+            paragraph.setTextAlignment(TextAlignment.JUSTIFIED);
+            paragraph.setSpacingRatio(1f); // Равномерное распределение пробелов
+        }
+
+        return paragraph;
     }
 
     private float[] getReportSize(ReportSetting reportSetting) {
