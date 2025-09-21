@@ -8,6 +8,8 @@ import ru.yurch.hours.model.User;
 import ru.yurch.hours.repository.UserRepository;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
@@ -19,6 +21,7 @@ public class UserService {
 
     public Optional<User> save(User user) {
         Optional<User> rsl = Optional.empty();
+
         try {
             rsl = Optional.of(userRepository.save(user));
         } catch (Exception e) {
@@ -53,5 +56,20 @@ public class UserService {
             LOG.error("Error occurred while finding user:  " + e.getMessage());
         }
         return rsl;
+    }
+
+    public Optional<User> findByEmail(String email) {
+        Optional<User> rsl = Optional.empty();
+        try {
+            rsl = userRepository.findByEmail(email);
+        } catch (Exception e) {
+            LOG.error("Error occurred while finding user:  " + e.getMessage());
+        }
+        return rsl;
+    }
+
+    public boolean isEmail(String email) {
+        Pattern pattern = Pattern.compile("\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*\\.\\w{2,4}");
+        return pattern.matcher(email).matches();
     }
 }

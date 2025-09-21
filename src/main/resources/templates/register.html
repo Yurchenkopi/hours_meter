@@ -35,6 +35,16 @@
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <div class="row">
+                        <div class="col-3 form-check mx-3">
+                            <input type="radio" class="form-check-input" id="authority.authority1" name="authority.authority" value="ROLE_EMPLOYER">
+                            <label class="form-check-label" for="authority.authority1"><b>Работодатель</b></label>
+                        </div>
+                        <div class="col-3 form-check">
+                            <input type="radio" class="form-check-input" id="authority.authority2" name="authority.authority" value="ROLE_USER" checked>
+                            <label class="form-check-label" for="authority.authority2"><b>Сотрудник</b></label>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
                         <div class="col-6"><a class="btn btn-secondary w-100" th:href="@{/}">Отмена</a></div>
                         <div class="col-6"><button class="btn btn-primary w-100" type="submit">Зарегистрироваться</button></div>
                     </div>

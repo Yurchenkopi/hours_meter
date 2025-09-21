@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 
 @Controller
 @RequestMapping("/items")
@@ -40,11 +41,12 @@ public class ItemController {
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) {
+        var today = LocalDate.now();
         if (endDate == null) {
-            endDate = LocalDate.now();
+            endDate = today.with(TemporalAdjusters.lastDayOfMonth());
         }
         if (startDate == null) {
-            startDate = LocalDate.of(2022, 1, 1);
+            startDate = today.with(TemporalAdjusters.firstDayOfMonth());
         }
         model.addAttribute("currentStartDate", startDate);
         model.addAttribute("currentEndDate", endDate);

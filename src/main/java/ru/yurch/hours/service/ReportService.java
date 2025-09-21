@@ -56,32 +56,39 @@ public class ReportService {
         PdfFont font = PdfFontFactory.createFont(IOUtils.toByteArray(fontStream), PdfEncodings.IDENTITY_H, true);
         document.setFont(font);
 
-        float[] headerTableColumnWidths = {35f, 65f};
-        Table headerTable = new Table(UnitValue.createPercentArray(headerTableColumnWidths));
-        headerTable.setWidth(UnitValue.createPercentValue(70));
+        float[] userInfoTableColumnWidth = {35f, 65f};
+        Table userInfoTable = new Table(UnitValue.createPercentArray(userInfoTableColumnWidth));
+        userInfoTable.setWidth(UnitValue.createPercentValue(70));
         Cell fioCell = createUserInfoCell(font, "ФИО");
-        Cell fioDataCell = createUserInfoCell(font, String.format("   %s %s %s   ", user.getSurname(), user.getName(), user.getPatronymic()));
+        Cell fioDataCell = createUserInfoCell(
+                font,
+                String.format("   %s %s %s   ", user.getSurname(), user.getName(), user.getPatronymic()))
+                .setBold();
         Cell dateCell = createUserInfoCell(font, "Дата создания");
-        Cell dateDataCell = createUserInfoCell(font, String.format("   %s   ", java.time.LocalDate.now()));
+        Cell dateDataCell = createUserInfoCell(
+                font,
+                String.format("   %s   ", java.time.LocalDate.now()))
+                .setBold();
         Cell timeCell = createUserInfoCell(font, "Период");
-        Cell timeDataCell = createUserInfoCell(font, String.format("c %s по %s", startDate, endDate));
-        headerTable.addCell(fioCell)
+        Cell timeDataCell = createUserInfoCell(
+                font,
+                String.format("c %s по %s", startDate, endDate))
+                .setBold();
+        userInfoTable
+                .addCell(fioCell)
                 .addCell(fioDataCell)
                 .addCell(dateCell)
                 .addCell(dateDataCell)
                 .addCell(timeCell)
                 .addCell(timeDataCell);
-        document.add(headerTable);
-        document.add(new Paragraph())
-                .add(new Paragraph())
-                .add(new Paragraph());
 
-        Table table = new Table(UnitValue.createPercentArray(getReportSize(user.getReportSetting())))
+
+        Table dataTable = new Table(UnitValue.createPercentArray(getReportSize(user.getReportSetting())))
                 .useAllAvailableWidth();
         var userReportSettings = getReportSettingMap(user.getReportSetting());
         for (String header : userReportSettings.keySet()) {
             if (userReportSettings.get(header)) {
-                table.addHeaderCell(createTableHeaderCell(font, header));
+                dataTable.addHeaderCell(createTableHeaderCell(font, header));
             }
         }
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -89,44 +96,52 @@ public class ReportService {
         for (List<ItemDto> items : report.getContent().values()) {
             for (ItemDto item : items) {
                 if (user.getReportSetting().isDateColumn()) {
-                    table.addCell(createTableMainCell(font, item.getDate().format(df)));
+                    dataTable.addCell(createTableMainCell(font, item.getDate().format(df)));
                 }
                 if (user.getReportSetting().isStartTimeColumn()) {
-                    table.addCell(createTableMainCell(font, item.getStartTime().format(tf)));
+                    dataTable.addCell(createTableMainCell(font, item.getStartTime().format(tf)));
                 }
                 if (user.getReportSetting().isEndTimeColumn()) {
-                    table.addCell(createTableMainCell(font, item.getEndTime().format(tf)));
+                    dataTable.addCell(createTableMainCell(font, item.getEndTime().format(tf)));
                 }
                 if (user.getReportSetting().isLunchBreakColumn()) {
-                    table.addCell(createTableMainCell(font, item.isLunchBreak() ? "Да" : "Нет"));
+                    dataTable.addCell(createTableMainCell(font, item.isLunchBreak() ? "Да" : "Нет"));
                 }
                 if (user.getReportSetting().isExtraHoursOnlyColumn()) {
-                    table.addCell(createTableMainCell(font, item.isExtraHoursOnly() ? "Да" : "Нет"));
+                    dataTable.addCell(createTableMainCell(font, item.isExtraHoursOnly() ? "Да" : "Нет"));
                 }
                 if (user.getReportSetting().isRemarkColumn()) {
-                    table.addCell(createTableMainCell(font, item.getRemark()));
+                    dataTable.addCell(createTableMainCell(font, item.getRemark()));
                 }
                 if (user.getReportSetting().isHoursColumn()) {
-                    table.addCell(createTableMainCell(font, String.format("%.2f",
+                    dataTable.addCell(createTableMainCell(font, String.format("%.2f",
                             (float) Math.round(item.getMinutes() * 100 / (60 * 8)) / 100)));
                 }
 
             }
         }
-        document.add(table);
-        document.add(new Paragraph())
-                .add(new Paragraph());
 
         float[] hoursTableColumnWidths = {65f, 35f};
         Table hoursTable = new Table(UnitValue.createPercentArray(hoursTableColumnWidths));
         hoursTable.setWidth(UnitValue.createPercentValue(50));
         Cell hoursCell = createTableTotalCell(font, "Общее время, дней");
         Cell hoursDataCell = createTableTotalCell(font, String.valueOf(
-                (float) Math.round(report.getTimeInMinutes() * 100 / (60 * 8)) / 100));
-        document.add(hoursTable
-                        .addCell(hoursCell)
-                        .addCell(hoursDataCell)
-                .setHorizontalAlignment(HorizontalAlignment.LEFT));
+                (float) Math.round(report.getTimeInMinutes() * 100 / (60 * 8)) / 100))
+                .setBold();
+        hoursTable
+                .addCell(hoursCell)
+                .addCell(hoursDataCell)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT);
+
+        document.add(userInfoTable);
+        document.add(new Paragraph())
+                .add(new Paragraph())
+                .add(new Paragraph());
+        document.add(dataTable);
+        document.add(new Paragraph())
+                .add(new Paragraph());
+        document.add(hoursTable);
+
         document.close();
     }
 
@@ -188,7 +203,8 @@ public class ReportService {
 
     private Cell createTableHeaderCell(PdfFont font, String text) {
         return createStyledTableCell(createTableHeaderParagraph(font), text, 5f, TextAlignment.CENTER, VerticalAlignment.MIDDLE, (DeviceRgb) ColorConstants.BLACK, 0.7f)
-                .setBackgroundColor(DEFAULT_HEADER_COLOR);
+                .setBackgroundColor(DEFAULT_HEADER_COLOR)
+                .setBold();
     }
 
     private Cell createTableMainCell(PdfFont font, String text) {
