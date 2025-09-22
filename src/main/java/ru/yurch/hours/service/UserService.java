@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import ru.yurch.hours.model.User;
 import ru.yurch.hours.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
@@ -71,5 +71,9 @@ public class UserService {
     public boolean isEmail(String email) {
         Pattern pattern = Pattern.compile("\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*\\.\\w{2,4}");
         return pattern.matcher(email).matches();
+    }
+
+    public List<User> findBindedEmployees(int employerId) {
+        return userRepository.findBindedEmployees(employerId);
     }
 }

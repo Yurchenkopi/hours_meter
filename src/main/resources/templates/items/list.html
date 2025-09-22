@@ -22,6 +22,12 @@
 <div class="container-fluid p-0">
     <header th:insert="blocks/header :: header"></header>
     <div class="container">
+        <div class="mb-3">
+            <label for="employees"><b>Сотрудники</b></label>
+            <select class="form-control" id="employees" name="employeesId" required>
+                <option th:each="employee : ${employees}" th:value="${employee.id}" th:text="${employee.surname}"></option>
+            </select>
+        </div>
         <div class="row mx-0">
             <form th:action="@{/items/find}" method="GET" enctype="multipart/form-data">
                 <div class="mb-2">

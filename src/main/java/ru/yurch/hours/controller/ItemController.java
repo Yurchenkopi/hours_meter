@@ -52,6 +52,12 @@ public class ItemController {
         model.addAttribute("currentEndDate", endDate);
         var currentUser = userService.findByName(user.getUsername());
         if (currentUser.isPresent()) {
+            if (currentUser.get().getAuthority().getAuthority().equals("ROLE_USER")) {
+                System.out.println("Role User");
+            } else if (currentUser.get().getAuthority().getAuthority().equals("ROLE_EMPLOYER")) {
+                model.addAttribute("employees", userService.findBindedEmployees(currentUser.get().getId()));
+                userService.findBindedEmployees(currentUser.get().getId()).forEach(System.out::println);
+            }
             var rsl = itemService.findItemsByDate(startDate, endDate, currentUser.get());
             var report = itemService.updateExtraTime(rsl);
             rsl.forEach(System.out::println);
