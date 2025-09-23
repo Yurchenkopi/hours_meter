@@ -54,24 +54,18 @@ public class ItemController {
         var currentUser = userService.findByName(user.getUsername());
         if (currentUser.isPresent()) {
             var searchedUser = userService.findByName(user.getUsername());
-            if (currentUser.get().getAuthority().getAuthority().equals("ROLE_USER")) {
+            if (userService.isEmployee(currentUser.get())) {
                 searchedUser = currentUser;
-            } else if (currentUser.get().getAuthority().getAuthority().equals("ROLE_EMPLOYER")) {
-                String selectedEmployeeUsername;
+            } else if (userService.isEmployer(currentUser.get())) {
                 if (selectedEmployeeId == null) {
-                    selectedEmployeeUsername = userService.findBindedEmployees(currentUser.get().getId()).stream().findFirst().get().getUsername();
-                    System.out.println(selectedEmployeeUsername);
-                } else {
-                    selectedEmployeeUsername = userService.findById(selectedEmployeeId).get().getUsername();
-                    selectedEmployeeId = userService.findByName(selectedEmployeeUsername).get().getId();
+                    selectedEmployeeId = userService.findBindedEmployees(currentUser.get().getId()).stream().findFirst().get().getId();
                 }
                 model.addAttribute("employeesId", selectedEmployeeId);
                 model.addAttribute("employees", userService.findBindedEmployees(currentUser.get().getId()));
-                searchedUser = userService.findByName(selectedEmployeeUsername);
+                searchedUser = userService.findById(selectedEmployeeId);
             }
             var rsl = itemService.findItemsByDate(startDate, endDate, searchedUser.get());
             var report = itemService.updateExtraTime(rsl);
-            rsl.forEach(System.out::println);
             model.addAttribute("itemsDtoMap", report.getContent());
             var minutes = report.getTimeInMinutes();
             model.addAttribute("sumOfTimeInMinutes", minutes);
@@ -131,19 +125,32 @@ public class ItemController {
             @SessionAttribute(name = "user") User user,
             Report report,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws IOException {
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(name = "employeesId", required = false) Integer selectedEmployeeId) throws IOException {
 
         var currentUser = userService.findByName(user.getUsername());
+        var searchedUser = userService.findByName(user.getUsername());
         if (currentUser.isPresent()) {
-            var rsl = itemService.findItemsByDate(startDate, endDate, currentUser.get());
+            if (userService.isEmployee(currentUser.get())) {
+                searchedUser = currentUser;
+            } else if (userService.isEmployer(currentUser.get())) {
+                searchedUser = userService.findById(selectedEmployeeId);
+            }
+            var rsl = itemService.findItemsByDate(startDate, endDate, searchedUser.get());
             report = itemService.updateExtraTime(rsl);
         }
         String fileName = String.format("attachment; filename=\"%s_%s.pdf\"",
-                CYR_TO_LAT.transliterate(currentUser.get().getSurname()),
+                CYR_TO_LAT.transliterate(searchedUser.get().getSurname()),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", fileName);
-        reportService.createPDFReport(response.getOutputStream(), report, currentUser.get(), startDate, endDate);
+        reportService.createPDFReport(
+                response.getOutputStream(),
+                report,
+                searchedUser.get(),
+                currentUser.get().getReportSetting(),
+                startDate,
+                endDate);
     }
 
 

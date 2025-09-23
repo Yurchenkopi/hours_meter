@@ -86,4 +86,12 @@ public class UserService {
     public List<User> findBindedEmployees(int employerId) {
         return userRepository.findBindedEmployees(employerId);
     }
+
+    public boolean isEmployee(User user) {
+        return user.getAuthority().getAuthority().equals("ROLE_USER");
+    }
+
+    public boolean isEmployer(User user) {
+        return user.getAuthority().getAuthority().equals("ROLE_EMPLOYER");
+    }
 }

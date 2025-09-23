@@ -46,6 +46,7 @@ public class ReportService {
     public void createPDFReport(OutputStream os,
                                 Report report,
                                 User user,
+                                ReportSetting reportSetting,
                                 LocalDate startDate,
                                 LocalDate endDate) throws IOException {
         PdfWriter writer = new PdfWriter(os);
@@ -83,9 +84,9 @@ public class ReportService {
                 .addCell(timeDataCell);
 
 
-        Table dataTable = new Table(UnitValue.createPercentArray(getReportSize(user.getReportSetting())))
+        Table dataTable = new Table(UnitValue.createPercentArray(getReportSize(reportSetting)))
                 .useAllAvailableWidth();
-        var userReportSettings = getReportSettingMap(user.getReportSetting());
+        var userReportSettings = getReportSettingMap(reportSetting);
         for (String header : userReportSettings.keySet()) {
             if (userReportSettings.get(header)) {
                 dataTable.addHeaderCell(createTableHeaderCell(font, header));
@@ -95,25 +96,25 @@ public class ReportService {
         DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
         for (List<ItemDto> items : report.getContent().values()) {
             for (ItemDto item : items) {
-                if (user.getReportSetting().isDateColumn()) {
+                if (reportSetting.isDateColumn()) {
                     dataTable.addCell(createTableMainCell(font, item.getDate().format(df)));
                 }
-                if (user.getReportSetting().isStartTimeColumn()) {
+                if (reportSetting.isStartTimeColumn()) {
                     dataTable.addCell(createTableMainCell(font, item.getStartTime().format(tf)));
                 }
-                if (user.getReportSetting().isEndTimeColumn()) {
+                if (reportSetting.isEndTimeColumn()) {
                     dataTable.addCell(createTableMainCell(font, item.getEndTime().format(tf)));
                 }
-                if (user.getReportSetting().isLunchBreakColumn()) {
+                if (reportSetting.isLunchBreakColumn()) {
                     dataTable.addCell(createTableMainCell(font, item.isLunchBreak() ? "Да" : "Нет"));
                 }
-                if (user.getReportSetting().isExtraHoursOnlyColumn()) {
+                if (reportSetting.isExtraHoursOnlyColumn()) {
                     dataTable.addCell(createTableMainCell(font, item.isExtraHoursOnly() ? "Да" : "Нет"));
                 }
-                if (user.getReportSetting().isRemarkColumn()) {
+                if (reportSetting.isRemarkColumn()) {
                     dataTable.addCell(createTableMainCell(font, item.getRemark()));
                 }
-                if (user.getReportSetting().isHoursColumn()) {
+                if (reportSetting.isHoursColumn()) {
                     dataTable.addCell(createTableMainCell(font, String.format("%.2f",
                             (float) Math.round(item.getMinutes() * 100 / (60 * 8)) / 100)));
                 }

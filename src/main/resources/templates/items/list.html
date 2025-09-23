@@ -22,12 +22,11 @@
 <div class="container-fluid p-0">
     <header th:insert="blocks/header :: header"></header>
     <div class="container">
-
         <div class="row mx-0">
-            <form th:action="@{/items/find}" method="GET" enctype="multipart/form-data">
+            <form th:action="@{/items/find}" method="GET" enctype="multipart/form-data" id="findForm">
                 <div class="mb-3" th:if="${session.user.authority.authority == 'ROLE_EMPLOYER'}">
                     <label for="employees"><b>Сотрудники</b></label>
-                    <select class="form-control" id="employees" name="employeesId" required>
+                    <select class="form-control" id="employees" name="employeesId" required onchange="submitForm()">
                         <option th:each="employee : ${employees}" th:value="${employee.id}" th:text="${employee.surname}" th:selected="${employee.id==employeesId}"></option>
                     </select>
                 </div>
@@ -65,7 +64,9 @@
                 </thead>
                 <tbody>
                 <div th:each="entry: ${itemsDtoMap.entrySet()}">
-                    <tr th:each="item: ${entry.value}" th:href="@{/items/update?id={id}(id=${item.id})}" style="cursor: pointer;">
+                    <tr th:each="item: ${entry.value}"
+                        th:attr="data-role=${session.user.authority.authority}, data-id=${item.id}"
+                        style="cursor: pointer;">
                         <td th:text="${item.seqNum}"></td>
                         <td th:text="${#temporals.format(item.date, 'yyyy-MM-dd')}"></td>
                         <td th:text="${#temporals.format(item.startTime, 'HH:mm')}"></td>
@@ -144,6 +145,7 @@
 <script>
     function generateReport() {
         // Получаем значения дат
+        const selectedEmployeeId = document.getElementById('employees').value;
         const startDate = document.getElementById('startDate').value;
         const endDate = document.getElementById('endDate').value;
         // Проверяем, что даты выбраны
@@ -153,20 +155,26 @@
         }
 
         // Формируем URL для скачивания отчета
-        const url = `/items/generate-report?startDate=${startDate}&endDate=${endDate}`;
+        const url = `/items/generate-report?employeesId=${selectedEmployeeId}&startDate=${startDate}&endDate=${endDate}`;
 
         // Перенаправляем пользователя на URL
         window.location.href = url;
     }
-</script>
-<script>
+
+    function submitForm() {
+        // Отправка формы при выборе сотрудника
+        document.getElementById('findForm').submit();
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         var rows = document.querySelectorAll("tbody tr");
         rows.forEach(function(row) {
             row.addEventListener("click", function() {
                 var href = row.getAttribute("href");
-                if (href) {
-                    window.location.href = href;
+                var itemId = row.getAttribute("data-id");
+                var userRole = row.getAttribute("data-role");
+                if (userRole !== 'ROLE_EMPLOYER') {
+                    window.location.href = '/items/update?id=' + itemId;
                 }
             });
         });
