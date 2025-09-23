@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import ru.yurch.hours.model.Authority;
 import ru.yurch.hours.model.User;
 
 import javax.servlet.FilterChain;
@@ -30,6 +31,10 @@ public class AddUserNameToHeaderFilter extends HttpFilter {
         if (!authentication.getPrincipal().equals("anonymousUser")) {
             var userDetails = (UserDetails) authentication.getPrincipal();
             user.setUsername(userDetails.getUsername());
+            String role = userDetails.getAuthorities().stream().findFirst().get().getAuthority();
+            Authority authority = new Authority();
+            authority.setAuthority(role);
+            user.setAuthority(authority);
         } else {
             user.setUsername("Гость");
         }

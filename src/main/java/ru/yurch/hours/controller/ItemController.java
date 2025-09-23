@@ -39,7 +39,8 @@ public class ItemController {
             Model model,
             @SessionAttribute(name = "user") User user,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(name = "employeesId", required = false) Integer selectedEmployeeId
     ) {
         var today = LocalDate.now();
         if (endDate == null) {
@@ -52,13 +53,23 @@ public class ItemController {
         model.addAttribute("currentEndDate", endDate);
         var currentUser = userService.findByName(user.getUsername());
         if (currentUser.isPresent()) {
+            var searchedUser = userService.findByName(user.getUsername());
             if (currentUser.get().getAuthority().getAuthority().equals("ROLE_USER")) {
-                System.out.println("Role User");
+                searchedUser = currentUser;
             } else if (currentUser.get().getAuthority().getAuthority().equals("ROLE_EMPLOYER")) {
+                String selectedEmployeeUsername;
+                if (selectedEmployeeId == null) {
+                    selectedEmployeeUsername = userService.findBindedEmployees(currentUser.get().getId()).stream().findFirst().get().getUsername();
+                    System.out.println(selectedEmployeeUsername);
+                } else {
+                    selectedEmployeeUsername = userService.findById(selectedEmployeeId).get().getUsername();
+                    selectedEmployeeId = userService.findByName(selectedEmployeeUsername).get().getId();
+                }
+                model.addAttribute("employeesId", selectedEmployeeId);
                 model.addAttribute("employees", userService.findBindedEmployees(currentUser.get().getId()));
-                userService.findBindedEmployees(currentUser.get().getId()).forEach(System.out::println);
+                searchedUser = userService.findByName(selectedEmployeeUsername);
             }
-            var rsl = itemService.findItemsByDate(startDate, endDate, currentUser.get());
+            var rsl = itemService.findItemsByDate(startDate, endDate, searchedUser.get());
             var report = itemService.updateExtraTime(rsl);
             rsl.forEach(System.out::println);
             model.addAttribute("itemsDtoMap", report.getContent());

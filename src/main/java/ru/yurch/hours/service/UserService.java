@@ -58,6 +58,16 @@ public class UserService {
         return rsl;
     }
 
+    public Optional<User> findById(int id) {
+        Optional<User> rsl = Optional.empty();
+        try {
+            rsl = userRepository.findById(id);
+        } catch (Exception e) {
+            LOG.error("Error occurred while finding user:  " + e.getMessage());
+        }
+        return rsl;
+    }
+
     public Optional<User> findByEmail(String email) {
         Optional<User> rsl = Optional.empty();
         try {

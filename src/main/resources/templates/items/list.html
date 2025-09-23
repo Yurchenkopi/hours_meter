@@ -22,14 +22,15 @@
 <div class="container-fluid p-0">
     <header th:insert="blocks/header :: header"></header>
     <div class="container">
-        <div class="mb-3">
-            <label for="employees"><b>Сотрудники</b></label>
-            <select class="form-control" id="employees" name="employeesId" required>
-                <option th:each="employee : ${employees}" th:value="${employee.id}" th:text="${employee.surname}"></option>
-            </select>
-        </div>
+
         <div class="row mx-0">
             <form th:action="@{/items/find}" method="GET" enctype="multipart/form-data">
+                <div class="mb-3" th:if="${session.user.authority.authority == 'ROLE_EMPLOYER'}">
+                    <label for="employees"><b>Сотрудники</b></label>
+                    <select class="form-control" id="employees" name="employeesId" required>
+                        <option th:each="employee : ${employees}" th:value="${employee.id}" th:text="${employee.surname}" th:selected="${employee.id==employeesId}"></option>
+                    </select>
+                </div>
                 <div class="mb-2">
                     <label for="startDate"><b>Начало периода</b></label>
                     <input type="date" class="form-control" name="startDate" id="startDate" th:value="${currentStartDate}">
@@ -126,7 +127,7 @@
                     </div>
                 </div>
             </div>
-            <div class="container">
+            <div class="container" th:if="${session.user.authority.authority != 'ROLE_EMPLOYER'}">
                 <div class="row">
                     <a class="btn btn-primary w-100" th:href="@{/items/add}">
                         Добавить часы &nbsp;&nbsp;&nbsp;
