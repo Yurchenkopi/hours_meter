@@ -1,29 +1,23 @@
 package ru.yurch.hours.service;
 
 import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.SolidBorder;
+import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.font.PdfFontFactory;
-import com.itextpdf.io.font.constants.StandardFonts;
-import com.itextpdf.kernel.colors.ColorConstants;
-import com.itextpdf.layout.borders.SolidBorder;
-import com.itextpdf.layout.property.Property;
-import com.itextpdf.layout.renderer.ParagraphRenderer;
-import com.itextpdf.layout.renderer.IRenderer;
 import org.apache.commons.io.IOUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Arrays;
 
 public class ImprovedPdfReportGenerator {
     // Константы для настройки форматирования
@@ -78,9 +72,9 @@ public class ImprovedPdfReportGenerator {
 
         // Добавление описательного текста с правильными настройками
         Paragraph description = createStyledParagraph(
-                "Данный отчет содержит подробную информацию о результатах продаж " +
-                        "за текущий квартал. В отчете представлены ключевые показатели " +
-                        "эффективности, анализ трендов и рекомендации для улучшения результатов.",
+                "Данный отчет содержит подробную информацию о результатах продаж "
+                        + "за текущий квартал. В отчете представлены ключевые показатели "
+                        + "эффективности, анализ трендов и рекомендации для улучшения результатов.",
                 mainFont,
                 MAIN_FONT_SIZE,
                 TextAlignment.JUSTIFIED
@@ -115,10 +109,10 @@ public class ImprovedPdfReportGenerator {
 
         // Текст заключения с правильным форматированием
         Paragraph conclusionText = createStyledParagraph(
-                "По результатам анализа видно устойчивое развитие продаж. " +
-                        "Рекомендуется продолжить текущую стратегию с фокусом на " +
-                        "наиболее успешные товарные позиции. Особое внимание следует " +
-                        "уделить товарам с высоким потенциалом роста.",
+                "По результатам анализа видно устойчивое развитие продаж. "
+                        + "Рекомендуется продолжить текущую стратегию с фокусом на "
+                        + "наиболее успешные товарные позиции. Особое внимание следует "
+                        + "уделить товарам с высоким потенциалом роста.",
                 mainFont,
                 MAIN_FONT_SIZE,
                 TextAlignment.JUSTIFIED

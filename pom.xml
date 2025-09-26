@@ -7,7 +7,7 @@
   <groupId>ru.yurch</groupId>
   <packaging>jar</packaging>
   <artifactId>hours_meter</artifactId>
-  <version>v1.21</version>
+  <version>v2.0</version>
 
   <name>hours_meter</name>
 
@@ -115,6 +115,7 @@
           <groupId>com.itextpdf</groupId>
           <artifactId>itext7-core</artifactId>
           <version>7.1.18</version>
+          <type>pom</type>
       </dependency>
       <dependency>
           <groupId>com.ibm.icu</groupId>
