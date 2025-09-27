@@ -145,6 +145,15 @@
                 <liquibase.config>db/liquibase.properties</liquibase.config>
             </properties>
         </profile>
+        <profile>
+            <id>docker</id>
+            <properties>
+                <liquibase.changeLogFile>db/dbchangelog.xml</liquibase.changeLogFile>
+                <liquibase.url>jdbc:postgresql://hours_db:5432/hours_db</liquibase.url>
+                <liquibase.username>postgres</liquibase.username>
+                <liquibase.password>password</liquibase.password>
+            </properties>
+        </profile>
     </profiles>
   
   <build>
