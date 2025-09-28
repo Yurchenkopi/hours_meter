@@ -1,9 +1,9 @@
 version: "3.9"
 services:
 
-  hours_db:
+  hours-db:
     image: postgres
-    container_name: hours_db
+    container_name: hours-db
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=postgres
@@ -13,15 +13,17 @@ services:
       - ./db/shortcut/auth_data:/var/lib/postgresql/hours_db_data
     restart: always
 
-  hours_meter:
+  hours-meter:
     build:
       context: .
       dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
     environment:
-    - SPRING_DATASOURCE_URL=jdbc:postgresql://hours_db:5432/hours_db
+    - SPRING_DATASOURCE_URL=jdbc:postgresql://hours-db:5432/hours_db
     - SPRING_DATASOURCE_USERNAME=postgres
     - SPRING_DATASOURCE_PASSWORD=password
-    container_name: hours_meter
+    container_name: hours-meter
     depends_on:
-      - hours_db
+      - hours-db
 
