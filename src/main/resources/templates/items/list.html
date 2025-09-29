@@ -145,7 +145,8 @@
 <script>
     function generateReport() {
         // Получаем значения дат
-        const selectedEmployeeId = document.getElementById('employees').value;
+        const employeeSelect = document.getElementById('employees');
+        const selectedEmployeeId = employeeSelect ? employeeSelect.value : null;
         const startDate = document.getElementById('startDate').value;
         const endDate = document.getElementById('endDate').value;
         // Проверяем, что даты выбраны
@@ -155,7 +156,7 @@
         }
 
         // Формируем URL для скачивания отчета
-        const url = `/items/generate-report?employeesId=${selectedEmployeeId}&startDate=${startDate}&endDate=${endDate}`;
+        const url = employeeSelect ? `/items/generate-report?employeesId=${selectedEmployeeId}&startDate=${startDate}&endDate=${endDate}` : `/items/generate-report?startDate=${startDate}&endDate=${endDate}`;
 
         // Перенаправляем пользователя на URL
         window.location.href = url;
