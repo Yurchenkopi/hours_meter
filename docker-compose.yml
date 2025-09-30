@@ -4,6 +4,8 @@ services:
   hours-db:
     image: postgres
     container_name: hours-db
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=postgres

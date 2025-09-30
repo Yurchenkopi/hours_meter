@@ -82,67 +82,72 @@ public class ReportService {
                 .addCell(dateDataCell)
                 .addCell(timeCell)
                 .addCell(timeDataCell);
-
-
-        Table dataTable = new Table(UnitValue.createPercentArray(getReportSize(reportSetting)))
-                .useAllAvailableWidth();
-        var userReportSettings = getReportSettingMap(reportSetting);
-        for (String header : userReportSettings.keySet()) {
-            if (userReportSettings.get(header)) {
-                dataTable.addHeaderCell(createTableHeaderCell(font, header));
-            }
-        }
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
-        for (List<ItemDto> items : report.getContent().values()) {
-            for (ItemDto item : items) {
-                if (reportSetting.isDateColumn()) {
-                    dataTable.addCell(createTableMainCell(font, item.getDate().format(df)));
-                }
-                if (reportSetting.isStartTimeColumn()) {
-                    dataTable.addCell(createTableMainCell(font, item.getStartTime().format(tf)));
-                }
-                if (reportSetting.isEndTimeColumn()) {
-                    dataTable.addCell(createTableMainCell(font, item.getEndTime().format(tf)));
-                }
-                if (reportSetting.isLunchBreakColumn()) {
-                    dataTable.addCell(createTableMainCell(font, item.isLunchBreak() ? "Да" : "Нет"));
-                }
-                if (reportSetting.isExtraHoursOnlyColumn()) {
-                    dataTable.addCell(createTableMainCell(font, item.isExtraHoursOnly() ? "Да" : "Нет"));
-                }
-                if (reportSetting.isRemarkColumn()) {
-                    dataTable.addCell(createTableMainCell(font, item.getRemark()));
-                }
-                if (reportSetting.isHoursColumn()) {
-                    dataTable.addCell(createTableMainCell(font, String.format("%.2f",
-                            (float) Math.round(item.getMinutes() * 100 / (60 * 8)) / 100)));
-                }
-
-            }
-        }
-
-        float[] hoursTableColumnWidths = {65f, 35f};
-        Table hoursTable = new Table(UnitValue.createPercentArray(hoursTableColumnWidths));
-        hoursTable.setWidth(UnitValue.createPercentValue(50));
-        Cell hoursCell = createTableTotalCell(font, "Общее время, дней");
-        Cell hoursDataCell = createTableTotalCell(font, String.valueOf(
-                (float) Math.round(report.getTimeInMinutes() * 100 / (60 * 8)) / 100))
-                .setBold();
-        hoursTable
-                .addCell(hoursCell)
-                .addCell(hoursDataCell)
-                .setHorizontalAlignment(HorizontalAlignment.LEFT);
-
         document.add(userInfoTable);
         document.add(new Paragraph())
                 .add(new Paragraph())
                 .add(new Paragraph());
-        document.add(dataTable);
-        document.add(new Paragraph())
-                .add(new Paragraph());
-        document.add(hoursTable);
 
+        if (getReportSize(reportSetting).length != 0) {
+            Table dataTable = new Table(UnitValue.createPercentArray(getReportSize(reportSetting)))
+                    .useAllAvailableWidth();
+            var userReportSettings = getReportSettingMap(reportSetting);
+            for (String header : userReportSettings.keySet()) {
+                if (userReportSettings.get(header)) {
+                    dataTable.addHeaderCell(createTableHeaderCell(font, header));
+                }
+            }
+            DateTimeFormatter df = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
+            for (List<ItemDto> items : report.getContent().values()) {
+                for (ItemDto item : items) {
+                    if (reportSetting.isDateColumn()) {
+                        dataTable.addCell(createTableMainCell(font, item.getDate().format(df)));
+                    }
+                    if (reportSetting.isStartTimeColumn()) {
+                        dataTable.addCell(createTableMainCell(font, item.getStartTime().format(tf)));
+                    }
+                    if (reportSetting.isEndTimeColumn()) {
+                        dataTable.addCell(createTableMainCell(font, item.getEndTime().format(tf)));
+                    }
+                    if (reportSetting.isLunchBreakColumn()) {
+                        dataTable.addCell(createTableMainCell(font, item.isLunchBreak() ? "Да" : "Нет"));
+                    }
+                    if (reportSetting.isExtraHoursOnlyColumn()) {
+                        dataTable.addCell(createTableMainCell(font, item.isExtraHoursOnly() ? "Да" : "Нет"));
+                    }
+                    if (reportSetting.isRemarkColumn()) {
+                        dataTable.addCell(createTableMainCell(font, item.getRemark()));
+                    }
+                    if (reportSetting.isHoursColumn()) {
+                        dataTable.addCell(createTableMainCell(font, String.format("%.2f",
+                                (float) Math.round(item.getMinutes() * 100 / (60 * 8)) / 100)));
+                    }
+
+                }
+            }
+
+            float[] hoursTableColumnWidths = {65f, 35f};
+            Table hoursTable = new Table(UnitValue.createPercentArray(hoursTableColumnWidths));
+            hoursTable.setWidth(UnitValue.createPercentValue(50));
+            Cell hoursCell = createTableTotalCell(font, "Общее время, дней");
+            Cell hoursDataCell = createTableTotalCell(font, String.valueOf(
+                    (float) Math.round(report.getTimeInMinutes() * 100 / (60 * 8)) / 100))
+                    .setBold();
+            hoursTable
+                    .addCell(hoursCell)
+                    .addCell(hoursDataCell)
+                    .setHorizontalAlignment(HorizontalAlignment.LEFT);
+
+            document.add(dataTable);
+            document.add(new Paragraph())
+                    .add(new Paragraph());
+            document.add(hoursTable);
+        } else {
+            document.add(createStyledParagraph(font, MAIN_FONT_SIZE, TextAlignment.LEFT, (DeviceRgb) ColorConstants.RED, 0.1f)
+                    .add(String.format("Не выбраны данные для формирования отчёта!%s", System.lineSeparator()))
+                    .add("Проверьте пользовательские настройки отчёта.")
+            );
+        }
         document.close();
     }
 
