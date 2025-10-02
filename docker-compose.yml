@@ -4,6 +4,8 @@ services:
   hours-db:
     image: postgres
     container_name: hours-db
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=postgres
@@ -19,7 +21,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-      - "5432:5432"
     environment:
     - SPRING_DATASOURCE_URL=jdbc:postgresql://hours-db:5432/hours_db
     - SPRING_DATASOURCE_USERNAME=postgres
