@@ -10,9 +10,9 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=postgres
       - POSTGRES_DB=hours_db
-      - PGDATA=/var/lib/postgresql/hours_db_data
+      - PGDATA=/var/lib/postgresql/data
     volumes:
-      - ./db/shortcut/auth_data:/var/lib/postgresql/hours_db_data
+      - hours-db-data:/var/lib/postgresql/data
     restart: always
 
   hours-meter:
@@ -28,4 +28,6 @@ services:
     container_name: hours-meter
     depends_on:
       - hours-db
+volumes:
+  hours-db-data:
 
