@@ -19,5 +19,12 @@
     <include file="scripts/014_dml_update_users_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/015_dml_insert_into_authorities.sql" relativeToChangelogFile="true"/>
     <include file="scripts/016_ddl_create_employers_employees_table.sql" relativeToChangelogFile="true"/>
-    <include file="scripts/017_dml_update_report_setting_table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="017_dml_update_report_setting_table" author="your_name">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <dbms type="h2"/>
+            </not>
+        </preConditions>
+        <sqlFile path="scripts/017_dml_update_report_setting_table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
 </databaseChangeLog>
