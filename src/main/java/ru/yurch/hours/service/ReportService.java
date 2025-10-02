@@ -63,18 +63,15 @@ public class ReportService {
         Cell fioCell = createUserInfoCell(font, "ФИО");
         Cell fioDataCell = createUserInfoCell(
                 font,
-                String.format("   %s %s %s   ", user.getSurname(), user.getName(), user.getPatronymic()))
-                .setBold();
+                String.format("   %s %s %s   ", user.getSurname(), user.getName(), user.getPatronymic()));
         Cell dateCell = createUserInfoCell(font, "Дата создания");
         Cell dateDataCell = createUserInfoCell(
                 font,
-                String.format("   %s   ", java.time.LocalDate.now()))
-                .setBold();
+                String.format("   %s   ", java.time.LocalDate.now()));
         Cell timeCell = createUserInfoCell(font, "Период");
         Cell timeDataCell = createUserInfoCell(
                 font,
-                String.format("c %s по %s", startDate, endDate))
-                .setBold();
+                String.format("c %s по %s", startDate, endDate));
         userInfoTable
                 .addCell(fioCell)
                 .addCell(fioDataCell)
@@ -131,8 +128,7 @@ public class ReportService {
             hoursTable.setWidth(UnitValue.createPercentValue(50));
             Cell hoursCell = createTableTotalCell(font, "Общее время, дней");
             Cell hoursDataCell = createTableTotalCell(font, String.valueOf(
-                    (float) Math.round(report.getTimeInMinutes() * 100 / (60 * 8)) / 100))
-                    .setBold();
+                    (float) Math.round(report.getTimeInMinutes() * 100 / (60 * 8)) / 100));
             hoursTable
                     .addCell(hoursCell)
                     .addCell(hoursDataCell)

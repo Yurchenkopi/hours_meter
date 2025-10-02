@@ -24,7 +24,7 @@
     <div class="container">
         <div class="row mx-0">
             <form th:action="@{/items/find}" method="GET" enctype="multipart/form-data" id="findForm">
-                <div class="mb-3" th:if="${session.user.authority.authority == 'ROLE_EMPLOYER'}">
+                <div class="mb-3" th:if="${session.user.authority.authority == 'ROLE_EMPLOYER' || session.user.authority.authority == 'ROLE_ADMIN'}">
                     <label for="employees"><b>Сотрудники</b></label>
                     <select class="form-control" id="employees" name="employeesId" required onchange="submitForm()">
                         <option th:each="employee : ${employees}" th:value="${employee.id}" th:text="${employee.surname}" th:selected="${employee.id==employeesId}"></option>
@@ -128,7 +128,7 @@
                     </div>
                 </div>
             </div>
-            <div class="container" th:if="${session.user.authority.authority != 'ROLE_EMPLOYER'}">
+            <div class="container" th:if="${session.user.authority.authority != 'ROLE_EMPLOYER' || session.user.authority.authority == 'ROLE_ADMIN'}">
                 <div class="row">
                     <a class="btn btn-primary w-100" th:href="@{/items/add}">
                         Добавить часы &nbsp;&nbsp;&nbsp;
@@ -174,7 +174,7 @@
                 var href = row.getAttribute("href");
                 var itemId = row.getAttribute("data-id");
                 var userRole = row.getAttribute("data-role");
-                if (userRole !== 'ROLE_EMPLOYER') {
+                if ((userRole !== 'ROLE_EMPLOYER') || (userRole !== 'ROLE_ADMIN')) {
                     window.location.href = '/items/update?id=' + itemId;
                 }
             });
