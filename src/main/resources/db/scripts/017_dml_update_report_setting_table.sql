@@ -1,0 +1,1 @@
+SELECT setval('report_settings_id_seq', (SELECT MAX(id) FROM report_settings));

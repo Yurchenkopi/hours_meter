@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.yurch.hours.model.ReportSetting;
 import ru.yurch.hours.model.User;
 import ru.yurch.hours.repository.AuthorityRepository;
@@ -23,7 +24,7 @@ public class RegController {
     private final AuthorityService authorityService;
 
     @PostMapping("/reg")
-    public String regSave(@ModelAttribute User user, Model model) {
+    public String regSave(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes) {
         if (!userService.isEmail(user.getEmail())) {
             model.addAttribute("errorMessage", "Введен неверный адрес электронной почты.");
             return "register";
@@ -40,12 +41,14 @@ public class RegController {
         if (savedUser.isEmpty()) {
             if (userService.findByName(user.getUsername()).isPresent()) {
                 model.addAttribute("errorMessage", "Пользователь с таким username уже зарегистрирован.");
-            }
-            if (userService.findByEmail(user.getEmail()).isPresent()) {
+            } else if (userService.findByEmail(user.getEmail()).isPresent()) {
                 model.addAttribute("errorMessage", "Пользователь с таким email уже зарегистрирован.");
+            } else {
+                model.addAttribute("errorMessage", "Произошла ошибка при регистрации нового пользователя. Повторите попытку позже.");
             }
             return "register";
         }
+        redirectAttributes.addFlashAttribute("regMessage", "Новый пользователь успешно зарегистрирован.");
         return "redirect:/login";
     }
 

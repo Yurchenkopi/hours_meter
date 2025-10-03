@@ -56,7 +56,7 @@ public class ItemController {
             var searchedUser = userService.findByName(user.getUsername());
             if (userService.isEmployee(currentUser.get())) {
                 searchedUser = currentUser;
-            } else if (userService.isEmployer(currentUser.get())) {
+            } else if (userService.isEmployer(currentUser.get()) || userService.isAdmin(currentUser.get())) {
                 if (selectedEmployeeId == null) {
                     selectedEmployeeId = userService.findBindedEmployees(currentUser.get().getId()).stream().findFirst().get().getId();
                 }
@@ -133,7 +133,7 @@ public class ItemController {
         if (currentUser.isPresent()) {
             if (userService.isEmployee(currentUser.get())) {
                 searchedUser = currentUser;
-            } else if (userService.isEmployer(currentUser.get())) {
+            } else if (userService.isEmployer(currentUser.get()) || userService.isAdmin(currentUser.get())) {
                 searchedUser = userService.findById(selectedEmployeeId);
             }
             var rsl = itemService.findItemsByDate(startDate, endDate, searchedUser.get());

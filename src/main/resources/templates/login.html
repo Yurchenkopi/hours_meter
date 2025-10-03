@@ -21,6 +21,12 @@
                     <div class="mb-3" th:if="${not #lists.isEmpty(errorMessage)}">
                         <h5 class="text-danger" th:text="${errorMessage}"></h5>
                     </div>
+                    <div class="mb-3" th:if="${not #lists.isEmpty(message)}">
+                        <h5 class="text-success" th:text="${message}"></h5>
+                    </div>
+                    <div class="mb-3" th:if="${not #lists.isEmpty(regMessage)}">
+                        <h5 class="text-success" th:text="${regMessage}"></h5>
+                    </div>
                     <div class="mb-3">
                         <label for="username" class="form-label"><b>Логин</b></label>
                         <input type="text" class="form-control" id="username" name="username" placeholder="Имя пользователя" required>

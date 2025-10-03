@@ -94,4 +94,8 @@ public class UserService {
     public boolean isEmployer(User user) {
         return user.getAuthority().getAuthority().equals("ROLE_EMPLOYER");
     }
+
+    public boolean isAdmin(User user) {
+        return user.getAuthority().getAuthority().equals("ROLE_ADMIN");
+    }
 }
