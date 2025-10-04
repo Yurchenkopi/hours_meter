@@ -7,7 +7,7 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_PASSWORD=adminPassword
       - POSTGRES_USER=postgres
       - POSTGRES_DB=hours_db
       - PGDATA=/var/lib/postgresql/hours_db_data
@@ -24,7 +24,7 @@ services:
     environment:
     - SPRING_DATASOURCE_URL=jdbc:postgresql://hours-db:5432/hours_db
     - SPRING_DATASOURCE_USERNAME=postgres
-    - SPRING_DATASOURCE_PASSWORD=password
+    - SPRING_DATASOURCE_PASSWORD=adminPassword
     container_name: hours-meter
     depends_on:
       - hours-db

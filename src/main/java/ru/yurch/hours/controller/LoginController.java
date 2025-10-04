@@ -21,13 +21,15 @@ public class LoginController {
                             HttpServletRequest request,
                             Model model) {
         String errorMessage = null;
+        String message = null;
         if (error != null) {
-            errorMessage = "Username or Password is incorrect !!";
+            errorMessage = "Введён неверный логин или пароль.";
         }
         if (logout != null) {
-            errorMessage = "You have been successfully logged out !!";
+            message = "Выход из профиля выполнен.";
         }
         model.addAttribute("errorMessage", errorMessage);
+        model.addAttribute("message", message);
         return "login";
     }
 
