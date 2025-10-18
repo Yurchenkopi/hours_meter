@@ -4,9 +4,13 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.yurch.hours.dto.UserDto;
+import ru.yurch.hours.model.ReportSetting;
 import ru.yurch.hours.model.User;
+import ru.yurch.hours.repository.AuthorityRepository;
 import ru.yurch.hours.repository.UserRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -15,6 +19,7 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final AuthorityRepository authorityRepository;
 
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class.getName());
 
@@ -78,6 +83,27 @@ public class UserService {
         return rsl;
     }
 
+    public List<User> findAllEmployers() {
+        List<User> rsl = Collections.emptyList();
+        try {
+            rsl = userRepository.findAllEmployers();
+        } catch (Exception e) {
+            LOG.error("Error occurred while finding employers role users: " + e.getMessage());
+        }
+        return rsl;
+    }
+
+    public List<User> findAllEmployees() {
+        List<User> rsl = Collections.emptyList();
+        try {
+            rsl = userRepository.findAllEmployees();
+        } catch (Exception e) {
+            LOG.error("Error occurred while finding employees role users: " + e.getMessage());
+        }
+        return rsl;
+    }
+
+
     public boolean isEmail(String email) {
         Pattern pattern = Pattern.compile("\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*\\.\\w{2,4}");
         return pattern.matcher(email).matches();
@@ -97,5 +123,45 @@ public class UserService {
 
     public boolean isAdmin(User user) {
         return user.getAuthority().getAuthority().equals("ROLE_ADMIN");
+    }
+
+    public User userDtoToUser(UserDto userDto) {
+        var user = new User();
+        user.setId(userDto.getId());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword());
+        user.setEmail(userDto.getEmail());
+        if (userDto.isEmployer()) {
+            user.setAuthority(authorityRepository.findByAuthority("ROLE_EMPLOYER"));
+        } else {
+            user.setAuthority(authorityRepository.findByAuthority("ROLE_USER"));
+        }
+        var defaultReportSetting = new ReportSetting(
+                true,
+                true,
+                true,
+                false,
+                false,
+                false,
+                true);
+        user.setReportSetting(defaultReportSetting);
+        user.setName("NoName");
+        user.setSurname("NoSurname");
+        user.setPatronymic("NoPatronymic");
+        return user;
+    }
+
+    public UserDto userToUserDto(User user) {
+        var userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setUsername(user.getUsername());
+        userDto.setPassword(user.getPassword());
+        userDto.setEmail(user.getEmail());
+        if (authorityRepository.findByAuthority("ROLE_USER").equals(user.getAuthority())) {
+            userDto.setEmployer(false);
+        } else if (authorityRepository.findByAuthority("ROLE_EMPLOYER").equals(user.getAuthority())) {
+            userDto.setEmployer(true);
+        }
+        return userDto;
     }
 }

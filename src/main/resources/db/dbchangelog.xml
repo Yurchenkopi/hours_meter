@@ -27,4 +27,7 @@
         </preConditions>
         <sqlFile path="scripts/017_dml_update_report_setting_table.sql" relativeToChangelogFile="true"/>
     </changeSet>
+    <include file="scripts/019_ddl_add_constraint_into_employers_employees.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/020_ddl_add_constraint_into_employers_employees.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/021_ddl_create_password_reset_tokens_table.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

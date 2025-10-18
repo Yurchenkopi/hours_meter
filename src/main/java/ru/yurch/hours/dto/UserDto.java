@@ -1,42 +1,29 @@
-package ru.yurch.hours.model;
+package ru.yurch.hours.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.yurch.hours.controller.utils.MatchFields;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@Entity
-@Table(name = "users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@MatchFields(field = "password", fieldMatch = "passwordConfirmation", message = "Пароли должны совпадать.")
+public class UserDto {
+
     private int id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "authority_id")
-    private Authority authority;
-
-    private Long chatId;
-
+    @NotBlank(message = "Данное поле должно быть заполнено.")
     private String username;
 
     @NotBlank(message = "Данное поле должно быть заполнено.")
     @Pattern(regexp = "\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*\\.\\w{2,4}",
             message = "Введенный адрес не является адресом электронной почты.")
     private String email;
-
-    private String name;
-
-    private String patronymic;
-
-    private String surname;
 
     @NotBlank(message = "Данное поле должно быть заполнено.")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z]).+$",
@@ -45,9 +32,8 @@ public class User {
             message = "Не меньше 5 знаков")
     private String password;
 
-    private boolean enabled;
+    @NotBlank(message = "Данное поле должно быть заполнено.")
+    private String passwordConfirmation;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "report_settings_id")
-    private ReportSetting reportSetting;
+    private boolean employer;
 }

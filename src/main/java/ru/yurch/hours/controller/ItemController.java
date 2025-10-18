@@ -58,8 +58,17 @@ public class ItemController {
                 searchedUser = currentUser;
             } else if (userService.isEmployer(currentUser.get()) || userService.isAdmin(currentUser.get())) {
                 if (selectedEmployeeId == null) {
-                    selectedEmployeeId = userService.findBindedEmployees(currentUser.get().getId()).stream().findFirst().get().getId();
+                    var bindedEmployeesList = userService.findBindedEmployees(currentUser.get().getId());
+                    if (bindedEmployeesList.isEmpty()) {
+                        model.addAttribute("isNotBinded", true);
+                        model.addAttribute("errorMessage", "К вашей учётной записи ещё не привязано ни одного сотрудника. Обратитесь к администратору.");
+                        return "items/list";
+                    } else {
+                        selectedEmployeeId = bindedEmployeesList.stream().findFirst().get().getId();
+                        model.addAttribute("isNotBinded", false);
+                    }
                 }
+                model.addAttribute("isNotBinded", false);
                 model.addAttribute("employeesId", selectedEmployeeId);
                 model.addAttribute("employees", userService.findBindedEmployees(currentUser.get().getId()));
                 searchedUser = userService.findById(selectedEmployeeId);
@@ -84,7 +93,7 @@ public class ItemController {
         if (currentUser.isPresent()) {
             var rsl = itemService.findItemById(id);
             if (rsl.isEmpty()) {
-                model.addAttribute("message", "Не удалось найти выбранный интервал времени по указанному Id.");
+                model.addAttribute("errorMessage", "Не удалось найти выбранный интервал времени по указанному Id.");
                 return "errors/404";
             }
             model.addAttribute("item", rsl.get());
@@ -112,7 +121,7 @@ public class ItemController {
             item.setUser(userService.findByName(user.getUsername()).get());
             var isDeleted = itemService.delete(item);
             if (!isDeleted) {
-                model.addAttribute("message", "Не удалось удалить временной интервал.");
+                model.addAttribute("errorMessage", "Не удалось удалить временной интервал.");
                 return "errors/404";
             }
         }
@@ -165,7 +174,7 @@ public class ItemController {
         LOG.info("Item has \"extraHours\" label: {}", item.isExtraHoursOnly());
         var itemOptional = itemService.save(item);
         if (itemOptional.isEmpty()) {
-            model.addAttribute("message", "Не удалось добавить временной интервал.");
+            model.addAttribute("errorMessage", "Не удалось добавить временной интервал.");
             return "errors/404";
         }
         var message = String.format(
@@ -178,14 +187,13 @@ public class ItemController {
     @PostMapping("/update")
     public String updateItem(
             @SessionAttribute(name = "user") User user,
-            @RequestParam(name = "id", required = false) int id,
             @ModelAttribute Item item,
             Model model
     ) {
         item.setUser(userService.findByName(user.getUsername()).get());
         var isUpdated = itemService.update(item);
         if (!isUpdated) {
-            model.addAttribute("message", "Не удалось произвести редактирование временного интервала.");
+            model.addAttribute("errorMessage", "Не удалось произвести редактирование временного интервала.");
             return "errors/404";
         }
         var message = String.format(

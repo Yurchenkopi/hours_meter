@@ -10,7 +10,12 @@
                 <div class="navbar-nav me-auto">
                     <a class="nav-item nav-link" href="/index">Главная</a>
                     <a class="nav-item nav-link" href="/items/find">Статистика</a>
-                    <a class="nav-item nav-link" href="/items/add">Добавить часы</a>
+                    <div th:if="${session.user != null && session.user.authority != null && session.user.authority.authority != null && (session.user.authority.authority != 'ROLE_EMPLOYER' && session.user.authority.authority != 'ROLE_ADMIN')}">
+                        <a class="nav-item nav-link" href="/items/add">Добавить часы</a>
+                    </div>
+                    <div th:if="${session.user != null && session.user.authority != null && session.user.authority.authority != null && (session.user.authority.authority != 'ROLE_EMPLOYER' && session.user.authority.authority != 'ROLE_USER')}">
+                        <a class="nav-item nav-link" href="/bindlist">Привязать пользователя</a>
+                    </div>
                 </div>
                 <div class="navbar-nav" th:if="${session.user == null || session.user.username == 'Гость'}">
                     <a class="nav-item nav-link" th:href="@{/reg}">Регистрация</a>

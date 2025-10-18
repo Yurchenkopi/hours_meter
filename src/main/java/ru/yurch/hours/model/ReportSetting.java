@@ -1,7 +1,6 @@
 package ru.yurch.hours.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -9,6 +8,8 @@ import javax.persistence.*;
 @Table(name = "report_settings")
 @Data
 @EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReportSetting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +35,14 @@ public class ReportSetting {
 
     @Column(name = "hours_column")
     private boolean hoursColumn;
+
+    public ReportSetting(boolean dateColumn, boolean startTimeColumn, boolean endTimeColumn, boolean lunchBreakColumn, boolean extraHoursOnlyColumn, boolean remarkColumn, boolean hoursColumn) {
+        this.dateColumn = dateColumn;
+        this.startTimeColumn = startTimeColumn;
+        this.endTimeColumn = endTimeColumn;
+        this.lunchBreakColumn = lunchBreakColumn;
+        this.extraHoursOnlyColumn = extraHoursOnlyColumn;
+        this.remarkColumn = remarkColumn;
+        this.hoursColumn = hoursColumn;
+    }
 }

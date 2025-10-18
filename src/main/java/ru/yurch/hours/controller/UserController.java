@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.yurch.hours.model.ReportSetting;
 import ru.yurch.hours.model.User;
 import ru.yurch.hours.service.ReportSettingService;
 import ru.yurch.hours.service.UserService;
@@ -67,7 +66,7 @@ public class UserController {
         );
         var isUpdated = userService.update(tempUser);
         if (!isUpdated) {
-            model.addAttribute("message", "Не удалось произвести редактирование личных данных пользователя.");
+            model.addAttribute("errorMessage", "Не удалось произвести редактирование личных данных пользователя.");
             return "errors/404";
         }
         var message = String.format(
@@ -99,7 +98,7 @@ public class UserController {
         );
         var isUpdated = userService.update(tempUser);
         if (!isUpdated) {
-            model.addAttribute("message", "Не удалось обновить параметры отчета");
+            model.addAttribute("errorMessage", "Не удалось обновить параметры отчета");
             return "errors/404";
         }
         var message = String.format(

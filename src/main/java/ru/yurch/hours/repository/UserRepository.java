@@ -21,4 +21,14 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Transactional
     @Query("SELECT ee.employee FROM EmployerEmployee ee WHERE ee.employer.id = ?1")
     List<User> findBindedEmployees(int employerId);
+
+    @Modifying
+    @Transactional
+    @Query("SELECT u FROM User u JOIN FETCH u.authority a WHERE a.authority = 'ROLE_EMPLOYER'")
+    List<User> findAllEmployers();
+
+    @Modifying
+    @Transactional
+    @Query("SELECT u FROM User u JOIN FETCH u.authority a WHERE a.authority = 'ROLE_USER'")
+    List<User> findAllEmployees();
 }
