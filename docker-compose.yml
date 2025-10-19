@@ -25,6 +25,10 @@ services:
     - SPRING_DATASOURCE_URL=jdbc:postgresql://hours-db:5432/hours_db
     - SPRING_DATASOURCE_USERNAME=postgres
     - SPRING_DATASOURCE_PASSWORD=adminPassword
+    - SPRING_MAIL_HOST=smtp.gmail.com
+    - SPRING_MAIL_PORT=587
+    - SPRING_MAIL_USERNAME=yurchpi@gmail.com
+    - SPRING_MAIL_PASSWORD=wwfdxvngwzuluczv
     container_name: hours-meter
     depends_on:
       - hours-db
