@@ -17,7 +17,7 @@ public class MailSenderService {
     private static final Logger LOG = LoggerFactory.getLogger(MailSenderService.class.getName());
 
     public void sendResetLink(PasswordResetToken passwordResetToken) {
-        String resetUrl = "http://45.142.36.220:8080//reset-password?token=" + passwordResetToken.getToken();
+        String resetUrl = "http://45.142.36.220:8080/reset-password?token=" + passwordResetToken.getToken();
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(passwordResetToken.getUser().getEmail());
         message.setSubject("Восстановление пароля");
