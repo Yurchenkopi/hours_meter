@@ -11,9 +11,9 @@
     <title>Вход</title>
 </head>
 <body>
-<div class="container-fluid p-0">
+<div class="container-fluid p-0 d-flex flex-column min-vh-100">
     <header th:insert="blocks/header :: header"></header>
-    <div class="container">
+    <div class="container flex-grow-1">
         <div class="row">
             <div class="col-3"></div>
             <div class="col-6">
@@ -47,7 +47,7 @@
             <div class="col-3"></div>
         </div>
     </div>
-    <div class="fixed-bottom bg-light">
+    <div class="mt-2 bg-light">
         <footer th:insert="blocks/footer :: footer"></footer>
     </div>
 </div>

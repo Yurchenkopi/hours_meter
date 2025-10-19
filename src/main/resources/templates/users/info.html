@@ -21,59 +21,59 @@
   </style>
 </head>
 <body>
-<div class="container-fluid p-0">
+<div class="container-fluid p-0 d-flex flex-column min-vh-100">
   <header th:insert="blocks/header :: header"></header>
   <form class="mt-2" th:action="@{/users/updateInfo}" method="post" enctype="multipart/form-data">
-    <div class="container">
-      <div class="row mt-5">
-        <div class="col-2">
+    <div class="container flex-grow-1">
+      <div class="d-flex flex-wrap gap-2 justify-content-left mt-5">
+        <div class="d-flex flex-column" style="width: 200px;">
           <label for="username" class="form-label" style="text-align: left"><b>Имя пользователя: </b></label>
         </div>
-        <div class="col-3">
+        <div class="flex-grow-1">
           <input type="text" class="form-control" id="username" name="username" th:field="${user.username}" placeholder="Имя пользователя" disabled>
         </div>
       </div>
-      <div class="row mt-2">
-        <div class="col-2">
+      <div class="d-flex flex-wrap gap-2 justify-content-left mt-2">
+        <div class="d-flex flex-column" style="width: 200px;">
           <label for="email" class="form-label" style="text-align: left"><b>Электронная почта: </b></label>
         </div>
-        <div class="col-3">
+        <div class="flex-grow-1">
           <input type="text" class="form-control" id="email" name="email" th:field="${user.email}" placeholder="Электронная почта" disabled>
         </div>
       </div>
-      <div class="row mt-5">
-        <div class="col-2">
+      <div class="d-flex flex-wrap gap-2 justify-content-left mt-5">
+        <div class="d-flex flex-column" style="width: 200px;">
           <label for="surname" class="form-label" style="text-align: left"><b>Фамилия: </b></label>
         </div>
-        <div class="col-3">
+        <div class="flex-grow-1">
           <input type="text" class="form-control" id="surname" name="surname" th:field="${user.surname}" placeholder="Фамилия">
         </div>
       </div>
-      <div class="row mt-2">
-        <div class="col-2">
+      <div class="d-flex flex-wrap gap-2 justify-content-left mt-2">
+        <div class="d-flex flex-column" style="width: 200px;">
           <label for="name" class="form-label" style="text-align: left"><b>Имя: </b></label>
         </div>
-        <div class="col-3">
+        <div class="flex-grow-1">
           <input type="text" class="form-control" id="name" name="name" th:field="${user.name}" placeholder="Имя">
         </div>
       </div>
-      <div class="row mt-2">
-        <div class="col-2">
+      <div class="d-flex flex-wrap gap-2 justify-content-left mt-2">
+        <div class="d-flex flex-column" style="width: 200px;">
           <label for="patronymic" class="form-label" style="text-align: left"><b>Отчество: </b></label>
         </div>
-        <div class="col-3">
+        <div class="flex-grow-1">
           <input type="text" class="form-control" id="patronymic" name="patronymic" th:field="${user.patronymic}" placeholder="Отчество">
         </div>
       </div>
-      <div class="row col-5 mt-3">
-        <button class="btn btn-primary w-100" type="submit">
+      <div class="d-flex flex-wrap gap-2 justify-content-left mt-3">
+        <button class="btn btn-primary flex-grow-1" type="submit">
           Сохранить личные данные&nbsp;&nbsp;&nbsp;
           <i class="fa fa-floppy-disk"></i>
         </button>
       </div>
     </div>
   </form>
-  <div class="fixed-bottom bg-light">
+  <div class="mt-2 bg-light">
     <footer th:insert="blocks/footer :: footer"></footer>
   </div>
 </div>

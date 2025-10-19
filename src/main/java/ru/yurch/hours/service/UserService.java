@@ -129,6 +129,9 @@ public class UserService {
         var user = new User();
         user.setId(userDto.getId());
         user.setUsername(userDto.getUsername());
+        user.setName(userDto.getName());
+        user.setPatronymic(userDto.getPatronymic());
+        user.setSurname(userDto.getSurname());
         user.setPassword(userDto.getPassword());
         user.setEmail(userDto.getEmail());
         if (userDto.isEmployer()) {
@@ -145,9 +148,15 @@ public class UserService {
                 false,
                 true);
         user.setReportSetting(defaultReportSetting);
-        user.setName("NoName");
-        user.setSurname("NoSurname");
-        user.setPatronymic("NoPatronymic");
+        if (userDto.getName().isEmpty()) {
+            user.setName(String.format("%s_name", user.getUsername()));
+        }
+        if (userDto.getPatronymic().isEmpty()) {
+            user.setPatronymic(String.format("%s_patronymic", user.getUsername()));
+        }
+        if (userDto.getSurname().isEmpty()) {
+            user.setSurname(String.format("%s_surname", user.getUsername()));
+        }
         return user;
     }
 
@@ -155,6 +164,9 @@ public class UserService {
         var userDto = new UserDto();
         userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
+        userDto.setName(user.getName());
+        userDto.setPatronymic(user.getPatronymic());
+        userDto.setSurname(user.getSurname());
         userDto.setPassword(user.getPassword());
         userDto.setEmail(user.getEmail());
         if (authorityRepository.findByAuthority("ROLE_USER").equals(user.getAuthority())) {

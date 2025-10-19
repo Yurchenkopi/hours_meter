@@ -1,6 +1,8 @@
 package ru.yurch.hours.controller;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.yurch.hours.dto.UserDto;
-import ru.yurch.hours.service.AuthorityService;
 import ru.yurch.hours.service.UserService;
 
 import javax.validation.Valid;
@@ -23,14 +24,17 @@ public class RegController {
     private final PasswordEncoder encoder;
     private final UserService userService;
 
+    private static final Logger LOG = LoggerFactory.getLogger(RegController.class.getName());
+
     @PostMapping("/reg")
     public String register(@ModelAttribute @Valid UserDto userDto, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
-        System.out.println(userDto);
         if (result.hasErrors()) {
             model.addAttribute("org.springframework.validation.BindingResult.userDto", result);
             return "register";
         }
+
         var user = userService.userDtoToUser(userDto);
+        LOG.info("Register user: {}", user);
         user.setEnabled(true);
         user.setPassword(encoder.encode(user.getPassword()));
         var savedUser = userService.save(user);

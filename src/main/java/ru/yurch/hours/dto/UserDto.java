@@ -20,6 +20,12 @@ public class UserDto {
     @NotBlank(message = "Данное поле должно быть заполнено.")
     private String username;
 
+    private String name;
+
+    private String patronymic;
+
+    private String surname;
+
     @NotBlank(message = "Данное поле должно быть заполнено.")
     @Pattern(regexp = "\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*\\.\\w{2,4}",
             message = "Введенный адрес не является адресом электронной почты.")
@@ -27,9 +33,9 @@ public class UserDto {
 
     @NotBlank(message = "Данное поле должно быть заполнено.")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z]).+$",
-            message = "Пароль должен содержать хотя бы одну строчную и прописную букву.")
+            message = "Пароль должен содержать хотя бы одну строчную и прописную буквы.")
     @Size(min = 5,
-            message = "Не меньше 5 знаков")
+            message = "Длина пароля должна быть не менее 5 символов.")
     private String password;
 
     @NotBlank(message = "Данное поле должно быть заполнено.")

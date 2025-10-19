@@ -19,9 +19,9 @@
     </style>
 </head>
 <body>
-<div class="container-fluid p-0">
+<div class="container-fluid p-0 d-flex flex-column min-vh-100">
     <header th:insert="blocks/header :: header"></header>
-    <div class="container">
+    <div class="container flex-grow-1">
         <div class="mb-3" th:if="${not #lists.isEmpty(errorMessage)}" id="error-message">
             <h6 class="text-danger" th:text="${errorMessage}"></h6>
         </div>
@@ -57,7 +57,7 @@
             </div>
         </div>
     </div>
-    <div class="bg-light sticky-bottom">
+    <div class="mt-2 bg-light">
         <footer th:insert="blocks/footer :: footer"></footer>
     </div>
 </div>

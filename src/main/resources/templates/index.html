@@ -14,9 +14,9 @@
     <title>HoursMeter</title>
 </head>
 <body>
-<div class="container-fluid p-0">
+<div class="container-fluid p-0 d-flex flex-column min-vh-100">
     <header th:insert="blocks/header :: header"></header>
-    <div class="container mt-2">
+    <div class="container mt-2 flex-grow-1">
         <h5>Описание проекта</h5>
         <p>Проект выполнен в учебных целях для освоения возможностей Spring.</br>
             Проект является сервисом, позволяющим контролировать дополнительное время, отработанное сотрудниками.
@@ -55,7 +55,7 @@
             <li>Maven 3.9.9</li>
         </ul>
     </div>
-    <div class="bg-light sticky-bottom">
+    <div class="mt-2 bg-light">
         <footer th:insert="blocks/footer :: footer"></footer>
     </div>
 </div>

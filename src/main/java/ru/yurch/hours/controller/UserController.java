@@ -15,7 +15,6 @@ import ru.yurch.hours.service.UserService;
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final ReportSettingService reportSettingService;
 
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class.getName());
 

@@ -14,9 +14,9 @@
     <title>HoursMeter</title>
 </head>
 <body>
-<div class="container-fluid p-0">
+<div class="container-fluid p-0 d-flex flex-column min-vh-100">
     <header th:insert="blocks/header :: header"></header>
-    <div class="container">
+    <div class="container flex-grow-1">
         <div class="row pt-3">
             <div class="card" style="width: 100%">
                 <div class="card-header">
@@ -47,7 +47,7 @@
             </div>
         </div>
     </div>
-    <div class="bg-light sticky-bottom">
+    <div class="mt-2 bg-light">
         <footer th:insert="blocks/footer :: footer"></footer>
     </div>
 </div>
